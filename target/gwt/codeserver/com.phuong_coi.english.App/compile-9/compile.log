@@ -1,0 +1,7 @@
+binding: user.agent=safari
+Compiling module com.phuong_coi.english.App
+   Tracing compile failure path for type 'com.phuong_coi.english.service.UserServiceAsync'
+      [ERROR] Errors in 'file:/E:/intern/english/english-shared/src/main/java/com/phuong_coi/english/service/UserServiceAsync.java'
+         [ERROR] Line 9: Syntax error, insert ";" to complete MethodDeclaration
+   [ERROR] Aborting compile due to errors in some input files
+[ERROR] Compiler returned false

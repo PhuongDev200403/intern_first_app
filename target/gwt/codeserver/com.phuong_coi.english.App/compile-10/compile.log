@@ -1,0 +1,14 @@
+binding: user.agent=safari
+Compiling module com.phuong_coi.english.App
+   Unification traversed 1185 fields and methods and 826 types. 12 are considered part of the current module and 23 had all of their fields and methods traversed.
+   [WARN] Some stale types ([com.phuong_coi.english.view.CwFormView$lambda$0$Type]) were not reprocessed as was expected. This is either a compiler bug or a Generator has legitimately stopped creating these types.
+   Compiling 1 permutation
+      Compiling permutation 0...
+      Linking per-type JS with 12 new/changed types.
+      Source Maps Enabled
+   Compile of permutations succeeded
+   Compilation succeeded -- 1.492s
+Linking into E:\intern\english\target\gwt\codeserver\com.phuong_coi.english.App\compile-10\war\english; Writing extras to E:\intern\english\target\gwt\codeserver\com.phuong_coi.english.App\compile-10\extras\english
+   Link succeeded
+   Linking succeeded -- 0.222s
+1.836s total -- Compile completed

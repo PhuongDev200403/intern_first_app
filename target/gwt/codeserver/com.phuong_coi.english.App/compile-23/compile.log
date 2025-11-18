@@ -1,0 +1,13 @@
+binding: user.agent=safari
+Compiling module com.phuong_coi.english.App
+   Unification traversed 1049 fields and methods and 704 types. 7 are considered part of the current module and 16 had all of their fields and methods traversed.
+   Compiling 1 permutation
+      Compiling permutation 0...
+      Linking per-type JS with 7 new/changed types.
+      Source Maps Enabled
+   Compile of permutations succeeded
+   Compilation succeeded -- 1.474s
+Linking into E:\intern\english\target\gwt\codeserver\com.phuong_coi.english.App\compile-23\war\english; Writing extras to E:\intern\english\target\gwt\codeserver\com.phuong_coi.english.App\compile-23\extras\english
+   Link succeeded
+   Linking succeeded -- 0.218s
+1.803s total -- Compile completed

@@ -1,0 +1,2 @@
+serviceClass: com.phuong_coi.english.GreetingService
+path: 5FB365F6CCB44B06B8BB5BD9D16F0019.gwt.rpc

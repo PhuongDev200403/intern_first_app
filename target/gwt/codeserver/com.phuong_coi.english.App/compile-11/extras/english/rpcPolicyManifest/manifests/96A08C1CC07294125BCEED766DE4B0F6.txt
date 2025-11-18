@@ -1,0 +1,2 @@
+serviceClass: com.phuong_coi.english.service.UserService
+path: E00DB62A3EB0CB6F9FBC75E6B0D692F4.gwt.rpc

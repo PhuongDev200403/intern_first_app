@@ -1,0 +1,7 @@
+binding: user.agent=safari
+Compiling module com.phuong_coi.english.App
+   Tracing compile failure path for type 'com.phuong_coi.english.view.CwFormView'
+      [ERROR] Errors in 'file:/E:/intern/english/english-client/src/main/java/com/phuong_coi/english/view/CwFormView.java'
+         [ERROR] Line 227: The method updateUser(User, String, new AsyncCallback<User>(){}) is undefined for the type UserServiceAsync
+   [ERROR] Aborting compile due to errors in some input files
+[ERROR] Compiler returned false
