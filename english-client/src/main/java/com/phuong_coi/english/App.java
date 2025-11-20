@@ -8,97 +8,77 @@ import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.phuong_coi.english.presenter.FormPresenter;
 import com.phuong_coi.english.presenter.UserListPresenter;
-import com.phuong_coi.english.view.CwFormView;
+//import com.phuong_coi.english.view.CwFormView;
+import com.phuong_coi.english.view.FormView;
 import com.phuong_coi.english.view.UserListView;
 
 public class App implements EntryPoint {
 
-	private final DeckPanel deckPanel = new DeckPanel();
-
-	private final UserListView userListView = new UserListView();
+	private final DeckPanel deck = new DeckPanel();
 
 	public void onModuleLoad() {
+		FormView formView = new FormView();
+		UserListView listView = new UserListView();
 
-		String token = History.getToken();
-		if (token != null && token.startsWith("#")) {
-			History.replaceItem(token.substring(1), false); 
-		}
+		UserListPresenter listPresenter = new UserListPresenter(listView);
+		FormPresenter formPresenter = new FormPresenter(formView, listPresenter);
 
-		// add các view vào giao diện chính
-		UserListPresenter presenter = new UserListPresenter(userListView);
-		CwFormView formView = new CwFormView(presenter);
-		
-		// Kết nối formView với userListView để có thể fill data
-		userListView.setFormView(formView);
+		// Kết nối ngược: ListView cần biết FormPresenter để click row
+		listView.setFormPresenter(formPresenter);
 
-		deckPanel.add(formView.onInitialize());
+		deck.add(formView);
+		deck.add(listView.asWidget());
+		deck.showWidget(0);
 
-		deckPanel.add(userListView.asWidget());
-
-		deckPanel.showWidget(0);
-
-		// Add 2 nút vào để tạo menu
 		RootPanel.get().add(createMenu());
-		RootPanel.get().add(deckPanel);
+		RootPanel.get().add(deck);
 
-		History.addValueChangeHandler(this::onHistoryChanged);
-
-		// Load trang đầu tiên nến url rỗng
+		History.addValueChangeHandler(this::handleHistory);
 		if (History.getToken().isEmpty()) {
-			History.newItem("add-user", true);
+			History.newItem("add-user");
 		} else {
 			History.fireCurrentHistoryState();
 		}
 
-		presenter.loadUsers();
+		listPresenter.loadUsers();
 	}
 
-	public Widget createMenu() {
-		HorizontalPanel panel = new HorizontalPanel();
-		panel.setSpacing(10);
-		panel.addStyleName("nav nav-pills mb-4 shadow-sm bg-white rounded");
+	private Widget createMenu() {
+		HorizontalPanel nav = new HorizontalPanel();
+		nav.setSpacing(15);
+		nav.addStyleName("nav nav-pills mb-3");
 
-		Anchor formLink = new Anchor("Thêm user", "add-user");
-		formLink.addStyleName("nav-link text-primary fw-bold text-decoration-none");
-		Anchor userList = new Anchor("danh sách users", "user-list");
-		userList.addStyleName("nav-link text-primary fw-bold text-decoration-none");
+		Anchor addLink = new Anchor("Form", "add-user");
+		Anchor listLink = new Anchor("List", "user-list");
+		addLink.addStyleName("text-decoration-none fs-5 me-3 text-primary");
+		listLink.addStyleName("text-decoration-none fs-5 text-primary");
 
-		formLink.addClickHandler(e -> {
+		addLink.addClickHandler(e -> {
 			e.preventDefault();
-			History.newItem("add-user", true);
-			formLink.addStyleName("active text-light");
-			userList.removeStyleName("active");
-			userList.removeStyleName("text-light");
+			History.newItem("add-user");
+			addLink.addStyleName("active");
+			listLink.removeStyleName("active");
+		});
+		listLink.addClickHandler(e -> {
+			e.preventDefault();
+			History.newItem("user-list");
+			addLink.removeStyleName("active");
+			listLink.addStyleName("active");
 		});
 
-		userList.addClickHandler(e -> {
-			e.preventDefault();
-			History.newItem("user-list", true);
-			userList.addStyleName("active text-light");
-			formLink.removeStyleName("active");
-			formLink.removeStyleName("text-light");
-		});
-
-		panel.add(formLink);
-		panel.add(userList);
-		return panel;
+		nav.add(addLink);
+		nav.add(listLink);
+		return nav;
 	}
 
-	private void onHistoryChanged(ValueChangeEvent<String> event) {
+	private void handleHistory(ValueChangeEvent<String> event) {
 		String token = event.getValue();
-
-		switch (token) {
-			case "add-user":
-				deckPanel.showWidget(0);
-				break;
-
-			case "user-list":
-				deckPanel.showWidget(1);
-				break;
-			default:
-				deckPanel.showWidget(0);
-				break;
+		if ("user-list".equals(token)) {
+			deck.showWidget(1);
+		} else {
+			deck.showWidget(0);
 		}
 	}
 }

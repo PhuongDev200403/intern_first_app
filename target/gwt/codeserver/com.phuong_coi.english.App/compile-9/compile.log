@@ -1,7 +1,13 @@
 binding: user.agent=safari
 Compiling module com.phuong_coi.english.App
-   Tracing compile failure path for type 'com.phuong_coi.english.service.UserServiceAsync'
-      [ERROR] Errors in 'file:/E:/intern/english/english-shared/src/main/java/com/phuong_coi/english/service/UserServiceAsync.java'
-         [ERROR] Line 9: Syntax error, insert ";" to complete MethodDeclaration
-   [ERROR] Aborting compile due to errors in some input files
-[ERROR] Compiler returned false
+   Unification traversed 1008 fields and methods and 695 types. 2 are considered part of the current module and 11 had all of their fields and methods traversed.
+   Compiling 1 permutation
+      Compiling permutation 0...
+      Linking per-type JS with 2 new/changed types.
+      Source Maps Enabled
+   Compile of permutations succeeded
+   Compilation succeeded -- 5.325s
+Linking into E:\intern\english\target\gwt\codeserver\com.phuong_coi.english.App\compile-9\war\english; Writing extras to E:\intern\english\target\gwt\codeserver\com.phuong_coi.english.App\compile-9\extras\english
+   Link succeeded
+   Linking succeeded -- 0.333s
+6.319s total -- Compile completed

@@ -36,7 +36,6 @@ public class CwFormView {
 
     private final UserListPresenter userListPresenter;
     
-    // Lưu số điện thoại cũ khi đang update
     private String originalPhoneNumber = null;
 
     // Constructor nhận presenter
@@ -135,11 +134,9 @@ public class CwFormView {
 
         // buttons
         Button btnAdd = new Button(cwConstantsButton.cwConstantsAdd());
-        btnAdd.addStyleName("btn-primary btn");
         formLayout.setWidget(6, 0, btnAdd);
 
         Button btnUpdate = new Button(cwConstantsButton.cwConstantsUpdate());
-        btnUpdate.addStyleName("btn btn-secondary");
         formLayout.setWidget(6, 1, btnUpdate);
 
         // Add handler
@@ -183,6 +180,9 @@ public class CwFormView {
                         if (userListPresenter != null) {
                             userListPresenter.loadUsers();
                         }
+
+                        //clear form nhập mỗi khi thêm mới thành công
+                        clearForm();
                     }
 
                     @Override
@@ -245,7 +245,7 @@ public class CwFormView {
 
         DecoratorPanel decoratorPanel = new DecoratorPanel();
         decoratorPanel.setSize("300px", "200px");
-        decoratorPanel.addStyleName("bg-light center");
+        decoratorPanel.addStyleName("bg-light");
         decoratorPanel.add(formLayout);
         return decoratorPanel;
     }
