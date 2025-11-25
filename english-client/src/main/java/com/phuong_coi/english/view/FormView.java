@@ -36,8 +36,7 @@ public class FormView extends Composite implements FormPresenter.Display {
         FlexTable layout = createLayout();
         DecoratorPanel panel = new DecoratorPanel();
         panel.setWidth("23%");
-        panel.getElement().setId("form-add");
-        panel.addStyleName("form-add");
+        panel.addStyleName("bg-light");
         panel.add(layout);
         initWidget(panel);
     }

@@ -9,9 +9,10 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.phuong_coi.english.presenter.FormPresenter;
+import com.phuong_coi.english.presenter.UserDetailPresenter;
 import com.phuong_coi.english.presenter.UserListPresenter;
-//import com.phuong_coi.english.view.CwFormView;
 import com.phuong_coi.english.view.FormView;
+import com.phuong_coi.english.view.UserDetailView;
 import com.phuong_coi.english.view.UserListView;
 
 public class App implements EntryPoint {
@@ -21,12 +22,16 @@ public class App implements EntryPoint {
 	public void onModuleLoad() {
 		FormView formView = new FormView();
 		UserListView listView = new UserListView();
+		UserDetailView detailView = new UserDetailView();
 
+	
+		UserDetailPresenter detailPresenter = new UserDetailPresenter(detailView);
 		UserListPresenter listPresenter = new UserListPresenter(listView);
 		FormPresenter formPresenter = new FormPresenter(formView, listPresenter);
 
 		// Kết nối ngược: ListView cần biết FormPresenter để click row
 		listView.setFormPresenter(formPresenter);
+		listView.setDetailPopupPresenter(detailPresenter);
 
 		deck.add(formView);
 		deck.add(listView.asWidget());
@@ -50,8 +55,10 @@ public class App implements EntryPoint {
 		nav.setSpacing(15);
 		nav.addStyleName("nav nav-pills mb-3");
 
-		Anchor addLink = new Anchor("Form", "add-user");
-		Anchor listLink = new Anchor("List", "user-list");
+		Anchor addLink = new Anchor("Form");
+		Anchor listLink = new Anchor("List");
+		addLink.setHref("#add-user");
+		listLink.setHref("#user-list");
 		addLink.addStyleName("text-decoration-none fs-5 me-3 text-primary");
 		listLink.addStyleName("text-decoration-none fs-5 text-primary");
 

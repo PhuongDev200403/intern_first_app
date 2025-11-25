@@ -25,6 +25,9 @@
     <url-pattern>/greet</url-pattern>
   </servlet-mapping>
 
+  <!-- Dùng chung cho tất cả server không cần cấu hình nhiều service dẫn đến web.xml phức tạp -->
+
+
 	<!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>

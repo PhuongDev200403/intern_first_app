@@ -6,6 +6,7 @@
 
   <!-- BỎ DẤU # TRÊN URL - DÒNG QUAN TRỌNG NHẤT -->
   <!-- <set-configuration-property name="gwt.pushstate.enabled" value="true" /> -->
+  <!-- <set-configuration-property name="gwt.html5HistorySupport" value="true" /> -->
 
   <source path="" />
 
