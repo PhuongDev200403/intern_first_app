@@ -85,7 +85,6 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 
         return existingUser;
 
-
         // return null;
     }
 

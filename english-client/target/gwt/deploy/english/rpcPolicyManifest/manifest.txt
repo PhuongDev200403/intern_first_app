@@ -1,3 +1,0 @@
-# Module english
-# RPC service class, partial path of RPC policy file
-com.phuong_coi.english.service.UserService, 5441EE1F8C1F53401FDEB9B1C50415AD.gwt.rpc
