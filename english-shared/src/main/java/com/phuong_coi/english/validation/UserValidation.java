@@ -2,7 +2,7 @@ package com.phuong_coi.english.validation;
 
 import java.util.List;
 
-import com.phuong_coi.english.model.User;
+import com.phuong_coi.english.model.UserDTO;
 
 public class UserValidation {
 
@@ -20,11 +20,11 @@ public class UserValidation {
     }
 
     // check if phone exists in provided list (works for server-side list)
-    public static boolean isPhoneNumberExists(List<User> userList, String phoneNumber) {
+    public static boolean isPhoneNumberExists(List<UserDTO> userList, String phoneNumber) {
         if (userList == null || phoneNumber == null) {
             return false;
         }
-        for (User u : userList) {
+        for (UserDTO u : userList) {
             if (phoneNumber.equals(u.getSoDienThoai())) {
                 return true;
             }

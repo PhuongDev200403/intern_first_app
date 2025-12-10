@@ -17,14 +17,87 @@
       <artifactId>english-shared</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.gwtproject</groupId>
       <artifactId>gwt-servlet-jakarta</artifactId>
     </dependency>
+
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
       <scope>provided</scope>
+    </dependency>
+
+    <!-- Objectify 6.x -->
+    <dependency>
+      <groupId>com.googlecode.objectify</groupId>
+      <artifactId>objectify</artifactId>
+      <version>6.1.3</version>
+    </dependency>
+
+    <!-- Google Cloud Datastore - Nâng lên version mới nhất trong 2.x -->
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-datastore</artifactId>
+      <version>1.106.3</version>
+    </dependency>
+
+    <!-- Guava - Version tương thích -->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>32.1.3-jre</version>
+    </dependency>
+
+    <!-- Google Auth Library - Required by google-cloud-datastore 2.x
+    <dependency>
+      <groupId>com.google.auth</groupId>
+      <artifactId>google-auth-library-oauth2-http</artifactId>
+      <version>1.19.0</version>
+    </dependency> -->
+
+    <!-- Google API Common - Required -->
+    <dependency>
+      <groupId>com.google.api</groupId>
+      <artifactId>gax</artifactId>
+      <version>2.36.0</version>
+    </dependency>
+
+    <!-- OpenTelemetry BOM để quản lý version đồng bộ -->
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-bom</artifactId>
+      <version>1.32.0</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-api</artifactId>
+      <version>1.32.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-context</artifactId>
+      <version>1.32.0</version>
+    </dependency>
+
+    <!-- App Engine API cho local emulator -->
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-1.0-sdk</artifactId>
+      <version>2.0.22</version>
+    </dependency>
+
+    <!-- Optional: cho test local -->
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-testing</artifactId>
+      <version>2.0.22</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -45,7 +118,6 @@
 
   <profiles>
     <profile>
-      <!-- XXX: We want to exclude english-client from 'env-dev' profile, Maven forces us to make a 'env-prod' profile -->
       <id>env-prod</id>
       <activation>
         <activeByDefault>true</activeByDefault>

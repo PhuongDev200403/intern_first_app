@@ -4,80 +4,137 @@ import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Widget;
-import com.phuong_coi.english.model.User;
-import com.phuong_coi.english.presenter.FormPresenter;
-import com.phuong_coi.english.presenter.UserDetailPresenter;
-import com.google.gwt.user.client.History;
+import com.phuong_coi.english.event.AppEventBus;
+import com.phuong_coi.english.event.UserAddedEvent;
+import com.phuong_coi.english.event.UserSelectedEvent;
+import com.phuong_coi.english.event.UserUpdatedEvent;
+import com.phuong_coi.english.model.UserDTO;
 
 public class UserListView extends Composite {
 
-    private VerticalPanel main = new VerticalPanel();
-    private FlexTable table = new FlexTable();
-    private FormPresenter formPresenter;
-    private UserDetailPresenter detailPresenter;
-
-    public UserListView() {
-        main.setSpacing(10);
-        table.setCellSpacing(10);
-        table.addStyleName("table table-striped table-hover table-bordered shadow-sm");
-
-        // Header
-        table.setText(0, 0, "Họ tên");
-        table.setText(0, 1, "Số ĐT");
-        table.setText(0, 2, "Phòng ban");
-        table.setText(0, 3, "Chức vụ");
-        table.setText(0, 4, "Ngày gia nhập");
-
-        main.add(table);
-        initWidget(main);
+    interface MyUiBinder extends UiBinder<Widget, UserListView> {
     }
 
-    public void showUsers(List<User> users) {
-        // Xóa dữ liệu cũ
-        for (int i = table.getRowCount() - 1; i > 0; i--) {
-            table.removeRow(i);
-        }
-    
-        DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy");
-        int row = 1;
-    
+    private MyUiBinder binder = GWT.create(MyUiBinder.class);
+    private static final DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy");
+
+    // private UserServiceAsync userService = GWT.create(UserService.class);
+
+    @UiField
+    FlexTable table;
+
+    // private FormPresenter formPresenter;
+    //private UserDetailPresenter detailPresenter;
+    private int rowIndex;
+
+    public UserListView() {
+        initWidget(binder.createAndBindUi(this));
+
+        // Header
+        table.setText(0, 0, "ID");
+        table.setText(0, 1, "Họ tên");
+        table.setText(0, 2, "Số ĐT");
+        table.setText(0, 3, "Phòng ban");
+        table.setText(0, 4, "Chức vụ");
+        table.setText(0, 5, "Ngày gia nhập");
+        // table.setText(0, 6, "Thao tác");
+
+        // Click handler đúng 100% cho FlexTable
         table.addClickHandler(event -> {
-            int clickedRow = table.getCellForEvent(event).getRowIndex();
-            if (clickedRow > 0 && clickedRow < table.getRowCount()) { 
-                User selected = users.get(clickedRow - 1);
-                // if (detailPresenter != null) {
-                //     detailPresenter.showDetail(selected);
-                // }
-                formPresenter.setUserForEdit(selected);
-                History.newItem("add-user");
+
+            HTMLTable.Cell cell = table.getCellForEvent(event);
+            if (cell == null || cell.getRowIndex() <= 0)
+                return;
+
+            int row = cell.getRowIndex();
+
+            rowIndex = row;
+
+            UserDTO user = (UserDTO) table.getRowFormatter()
+                    .getElement(row)
+                    .getPropertyObject("userData");
+
+            if (user != null) {
+                AppEventBus.get().fireEvent(new UserSelectedEvent(user));
+                GWT.log("Phát tín hiệu click vào một user nào đó tại dòng :" + rowIndex);
             }
         });
-    
-        for (User u : users) {
-            table.setText(row, 0, u.getFullName());
-            table.setText(row, 1, u.getSoDienThoai());
-            table.setText(row, 2, u.getPhongBan());
-            table.setText(row, 3, u.getChucVu());
-            table.setText(row, 4, u.getNgayVao() != null ? fmt.format(u.getNgayVao()) : "");
-    
+
+        AppEventBus.get().addHandler(UserAddedEvent.TYPE, event -> {
+            UserDTO userDTO = event.getUser();
+            GWT.log("lắng nghe sự kiện tạo một user mới tại userlistView.java");
+            addUserToTable(userDTO);
+        });
+
+        AppEventBus.get().addHandler(UserUpdatedEvent.TYPE, event -> {
+            GWT.log("Bắt tin hiệu cập nhật user tại userListView.java");
+
+            UserDTO userDTO = event.gUserDTO();
+            updateARow(rowIndex, userDTO);
+        });
+    }
+
+    public void showUsers(List<UserDTO> employeeDTOs) {
+        // Xóa dữ liệu cũ (giữ header)
+        while (table.getRowCount() > 1) {
+            table.removeRow(1);
+        }
+
+        int row = 1;
+        for (UserDTO u : employeeDTOs) {
+            table.setText(row, 0, u.getId().toString());
+            table.setText(row, 1, u.getFullName() != null ? u.getFullName() : "");
+            table.setText(row, 2, u.getSoDienThoai() != null ? u.getSoDienThoai() : "");
+            table.setText(row, 3, u.getPhongBan() != null ? u.getPhongBan() : "");
+            table.setText(row, 4, u.getChucVu() != null ? u.getChucVu() : "");
+            table.setText(row, 5, u.getNgayVao() != null ? fmt.format(u.getNgayVao()) : "");
+
+            // Lưu user + style
+            table.getRowFormatter().getElement(row).setPropertyObject("userData", u);
             table.getRowFormatter().addStyleName(row, "clickable-row cursor-pointer");
+
             row++;
         }
     }
 
-    public void setFormPresenter(FormPresenter presenter) {
-        this.formPresenter = presenter;
+    public void addUserToTable(UserDTO userDTO) {
+        int row = table.getRowCount();
+        table.setText(row, 0, userDTO.getId().toString());
+        table.setText(row, 1, userDTO.getFullName());
+        table.setText(row, 2, userDTO.getSoDienThoai());
+        table.setText(row, 3, userDTO.getPhongBan());
+        table.setText(row, 4, userDTO.getChucVu());
+        table.setText(row, 5, userDTO.getNgayVao() != null ? fmt.format(userDTO.getNgayVao()) : "");
+
+        table.getRowFormatter().getElement(row).setPropertyObject("userData", userDTO);
+        table.getRowFormatter().addStyleName(row, "clickable-row cursor-pointer");
     }
 
-    public void setDetailPopupPresenter(UserDetailPresenter detailPresenter){
-        this.detailPresenter = detailPresenter;
+    public void updateARow(int row, UserDTO userDTO) {
+        table.setText(row, 0, userDTO.getId().toString());
+        table.setText(row, 1, userDTO.getFullName());
+        table.setText(row, 2, userDTO.getSoDienThoai());
+        table.setText(row, 3, userDTO.getPhongBan());
+        table.setText(row, 4, userDTO.getChucVu());
+        table.setText(row, 5, userDTO.getNgayVao() != null ? fmt.format(userDTO.getNgayVao()) : "");
+
+        table.getRowFormatter().getElement(row).setPropertyObject("userData", userDTO);
+        table.getRowFormatter().addStyleName(row, "clickable-row cursor-pointer");
     }
+
+    // public void setFormPresenter(FormPresenter p) { this.formPresenter = p; }
+    // public void setDetailPopupPresenter(UserDetailPresenter p) {
+    //     this.detailPresenter = p;
+    // }
 
     public Widget asWidget() {
         return this;
     }
+
 }

@@ -5,94 +5,48 @@ import java.util.Date;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
 import com.google.gwt.user.datepicker.client.DateBox;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.phuong_coi.english.constants.CwConstantsList;
-import com.phuong_coi.english.model.User;
+import com.phuong_coi.english.model.UserDTO;
 import com.phuong_coi.english.presenter.FormPresenter;
 
 public class FormView extends Composite implements FormPresenter.Display {
 
+    interface FormUiBinder extends UiBinder<Widget, FormView>{};
+    private FormUiBinder formUiBinder = GWT.create(FormUiBinder.class);
+
     private final CwConstantsList constants = GWT.create(CwConstantsList.class);
 
-    private TextBox txtFullName = new TextBox();
-    private TextBox txtSoDienThoai = new TextBox();
-    private ListBox lbDepartment = new ListBox(false);
-    private ListBox lbRole = new ListBox(false);
-    private DateBox dateBox = new DateBox();
-    private Button btnAdd = new Button("Thêm mới");
-    private Button btnUpdate = new Button("Cập nhật");
+    @UiField TextBox txtFullName;
+    @UiField TextBox txtSoDienThoai;
+    @UiField ListBox lbDepartment;
+    @UiField ListBox lbRole;
+    @UiField DateBox dateBox;
+    @UiField Button btnAdd;
+    @UiField Button btnUpdate;
 
     public FormView() {
-        FlexTable layout = createLayout();
-        DecoratorPanel panel = new DecoratorPanel();
-        panel.setWidth("23%");
-        panel.addStyleName("bg-light");
-        panel.add(layout);
-        initWidget(panel);
-    }
 
-    private FlexTable createLayout() {
-        FlexTable table = new FlexTable();
-        table.setCellSpacing(10);
-        FlexCellFormatter fmt = table.getFlexCellFormatter();
-        table.setSize("400px", "400px");
+        initWidget(formUiBinder.createAndBindUi(this));
 
-        table.setHTML(0, 0, "<h4 class='text-center'>Quản lý người dùng</h4>");
-        fmt.setColSpan(0, 0, 2);
-        fmt.setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_CENTER);
+        // Cấu hình DateBox
+        dateBox.setFormat(new DateBox.DefaultFormat(
+            DateTimeFormat.getFormat("dd/MM/yyyy")));
 
-
-        table.setWidget(1, 0, new Label("Họ tên"));
-        table.setWidget(1, 1, txtFullName);
-        txtFullName.addStyleName("form-control");
-
-        table.setWidget(2, 0, new Label("Số điện thoại"));
-        table.setWidget(2, 1, txtSoDienThoai);
-        txtSoDienThoai.addStyleName("form-control");
-
-        table.setWidget(3, 0, new Label("Phòng ban"));
-        table.setWidget(3, 1, lbDepartment);
-        lbDepartment.addStyleName("form-select");
-
-        table.setWidget(4, 0, new Label("Chức vụ"));
-        table.setWidget(4, 1, lbRole);
-        lbRole.addStyleName("form-select");
-
-        table.setWidget(5, 0, new Label("Ngày gia nhập"));
-        table.setWidget(5, 1, dateBox);
-        dateBox.addStyleName("form-control");
-
-
-        // Buttons
-        table.setWidget(6, 0, btnAdd);
-        table.setWidget(6, 1, btnUpdate);
-
-        // Load data
+        // Load dữ liệu cho ListBox
         for (String d : constants.cwConstantsDepartment())
             lbDepartment.addItem(d);
         for (String r : constants.cwConstantsRole())
             lbRole.addItem(r);
-
-        dateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("dd/MM/yyyy")));
-        dateBox.addStyleName("form-control");
-        txtFullName.addStyleName("form-control");
-        txtSoDienThoai.addStyleName("form-control");
-        lbDepartment.addStyleName("form-select");
-        lbRole.addStyleName("form-select");
-
-        return table;
     }
-
 
     @Override
     public HasClickHandlers getAddButton() {
@@ -135,7 +89,7 @@ public class FormView extends Composite implements FormPresenter.Display {
     }
 
     @Override
-    public void fillUserData(User user) {
+    public void fillUserData(UserDTO user) {
         if (user == null) {
             clearForm();
             return;
@@ -213,4 +167,5 @@ public class FormView extends Composite implements FormPresenter.Display {
     public void showMessage(String message) {
         Window.alert(message);
     }
+
 }

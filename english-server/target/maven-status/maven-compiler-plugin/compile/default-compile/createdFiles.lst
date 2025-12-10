@@ -1,2 +1,4 @@
 com\phuong_coi\english\GreetingServiceImpl.class
 com\phuong_coi\english\UserServiceImpl.class
+com\phuong_coi\english\OfyService.class
+com\phuong_coi\english\entity\User.class

@@ -26,12 +26,12 @@ public class App implements EntryPoint {
 
 	
 		UserDetailPresenter detailPresenter = new UserDetailPresenter(detailView);
-		UserListPresenter listPresenter = new UserListPresenter(listView);
+		UserListPresenter listPresenter = new UserListPresenter(listView, detailPresenter);
 		FormPresenter formPresenter = new FormPresenter(formView, listPresenter);
 
 		// Kết nối ngược: ListView cần biết FormPresenter để click row
-		listView.setFormPresenter(formPresenter);
-		listView.setDetailPopupPresenter(detailPresenter);
+		//listView.setFormPresenter(formPresenter);
+		//listView.setDetailPopupPresenter(detailPresenter);
 
 		deck.add(formView);
 		deck.add(listView.asWidget());

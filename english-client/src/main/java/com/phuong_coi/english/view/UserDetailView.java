@@ -5,93 +5,55 @@ import java.util.Date;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-//import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.phuong_coi.english.constants.CwConstantsList;
-import com.phuong_coi.english.presenter.UserDetailPresenter;;
+import com.phuong_coi.english.presenter.UserDetailPresenter;
+import com.phuong_coi.english.presenter.UserListPresenter;;
 
 public class UserDetailView implements UserDetailPresenter.DetailPopup {
-    private final PopupPanel popup = new PopupPanel(true, true); // autoHide + modal
-    private final Button btnClose = new Button("Đóng");
-    private final DateBox dateBox = new DateBox();
+    interface UserDetailBinder extends UiBinder<Widget, UserDetailView>{};
+    private UserDetailBinder userDetailBinder = GWT.create(UserDetailBinder.class);
 
-    private final TextBox txtFullName = new TextBox();
-    private final TextBox txtSoDienThoai = new TextBox();
-    private final ListBox lbPhongBan = new ListBox(false);
-    private final ListBox lbRole = new ListBox(false);
+    private UserListPresenter userListPresenter;
+
+    private PopupPanel popup;
+    @UiField Button btnClose;
+    @UiField Button btnUpdate;
+    @UiField DateBox dateBox;
+    @UiField TextBox txtFullName;
+    @UiField TextBox txtSoDienThoai;
+    @UiField ListBox lbDepartment;
+    @UiField ListBox lbRole;
 
     private final CwConstantsList constants = GWT.create(CwConstantsList.class);
 
     public UserDetailView() {
-        popup.setGlassEnabled(true); // nền mờ
-        popup.addStyleName("shadow-lg rounded");
+        
+        Widget content = userDetailBinder.createAndBindUi(this);
 
-        VerticalPanel content = new VerticalPanel();
-        content.setSpacing(15);
-        content.addStyleName("p-4 bg-white");
-
-        HTML title = new HTML("<h4 class='text-center'>Chi tiết người dùng</h4>");
-        content.add(title);
-
-        FlexTable table = new FlexTable();
-        table.setCellSpacing(10);
-
-        table.setWidget(0, 0, new Label("Họ tên"));
-        table.setWidget(0, 1, txtFullName);
-
-        table.setWidget(1, 0, new Label("Số điện thoại"));
-        table.setWidget(1, 1, txtSoDienThoai);
-
-        table.setWidget(2, 0, new Label("Phòng ban"));
-        table.setWidget(2, 1, lbPhongBan);
-
-        table.setWidget(3, 0, new Label("Chức vụ"));
-        table.setWidget(3, 1, lbRole);
-
-        table.setWidget(4, 0, new Label("Ngày vào"));
-        dateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("dd/MM/yyyy")));
-        dateBox.setEnabled(false);
-        table.setWidget(4, 1, dateBox);
-
-        content.add(table);
-
-        HorizontalPanel buttons = new HorizontalPanel();
-        buttons.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-        buttons.setSpacing(10);
-        btnClose.addStyleName("btn btn-secondary");
-        buttons.add(btnClose);
-        content.add(buttons);
-
+        popup = new PopupPanel(true, true);
+        popup.setGlassEnabled(true);
+        popup.addStyleName("shadow-lg");
         popup.setWidget(content);
-
-        for (String dept : constants.cwConstantsDepartment()) {
-            lbPhongBan.addItem(dept);
-        }
-        for (String role : constants.cwConstantsRole()) {
-            lbRole.addItem(role);
-        }
-
-        // Disable để chỉ xem
-        txtFullName.setEnabled(false);
-        txtFullName.addStyleName("form-control");
-        txtSoDienThoai.setEnabled(false);
-        txtSoDienThoai.addStyleName("form-control");
-        lbPhongBan.setEnabled(false);
-        lbPhongBan.addStyleName("form-select");
-        lbRole.setEnabled(false);
-        lbRole.addStyleName("form-select");
-
         popup.hide();
+
+        dateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat("dd/MM/yyyy")));
+
+        for (String d : constants.cwConstantsDepartment()) lbDepartment.addItem(d);
+        for (String r : constants.cwConstantsRole()) lbRole.addItem(r);
+        txtSoDienThoai.setEnabled(false);
+    }
+
+    public void setUserListPresenter(UserListPresenter userListPresenter){
+        this.userListPresenter = userListPresenter;
     }
 
     @Override
@@ -105,19 +67,35 @@ public class UserDetailView implements UserDetailPresenter.DetailPopup {
     }
 
     @Override
+    public String getFullName() {
+        return txtFullName.getText();
+    }
+
+    @Override
     public void setSoDienThoai(String soDienThoai) {
         txtSoDienThoai.setText(soDienThoai);
     }
 
     @Override
+    public String getSoDienThoai() {
+        return txtSoDienThoai.getText();
+    }
+
+    @Override
     public void setPhongBan(String phongBan) {
-        for (int i = 0; i < lbPhongBan.getItemCount(); i++) {
-            if (lbPhongBan.getItemText(i).equals(phongBan)) {
-                lbPhongBan.setSelectedIndex(i);
+        for (int i = 0; i < lbDepartment.getItemCount(); i++) {
+            if (lbDepartment.getItemText(i).equals(phongBan)) {
+                lbDepartment.setSelectedIndex(i);
                 return;
             }
         }
         lbRole.setSelectedIndex(0);
+    }
+
+    @Override
+    public String getPhongBan() {
+        int idx = lbDepartment.getSelectedIndex();
+        return idx >= 0 ? lbDepartment.getItemText(idx) : "";
     }
 
     @Override
@@ -132,8 +110,19 @@ public class UserDetailView implements UserDetailPresenter.DetailPopup {
     }
 
     @Override
+    public String getChucVu() {
+        int idx = lbRole.getSelectedIndex();
+        return idx >= 0 ? lbRole.getItemText(idx) : "";
+    }
+
+    @Override
     public void setNgayVao(Date ngayVao) {
         dateBox.setValue(ngayVao);
+    }
+
+    @Override
+    public Date getNgayVao() {
+        return dateBox.getValue();
     }
 
     @Override
@@ -149,6 +138,16 @@ public class UserDetailView implements UserDetailPresenter.DetailPopup {
     @Override
     public void center() {
         popup.center();
+    }
+
+    @Override
+    public HasClickHandlers getUpdateButton() {
+        return btnUpdate;
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Window.alert(message);
     }
 
 }

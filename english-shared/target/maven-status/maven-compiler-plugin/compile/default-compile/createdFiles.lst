@@ -1,9 +1,9 @@
 com\phuong_coi\english\service\GreetingServiceAsync.class
 com\phuong_coi\english\validation\UserValidation.class
+com\phuong_coi\english\model\UserDTO.class
 com\phuong_coi\english\model\GreetingResponse.class
 com\phuong_coi\english\service\UserServiceAsync.class
 com\phuong_coi\english\exception\UserException.class
-com\phuong_coi\english\model\User.class
 com\phuong_coi\english\service\GreetingService.class
 com\phuong_coi\english\service\UserService.class
 com\phuong_coi\english\validation\FieldVerifier.class
