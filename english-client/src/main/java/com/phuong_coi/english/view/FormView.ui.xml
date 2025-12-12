@@ -55,7 +55,7 @@
                 <tr class="{style.tr}">
                     <td class="{style.label}">Họ tên:</td>
                     <td class="{style.input}">
-                        <g:TextBox ui:field="txtFullName" width="100%" addStyleNames="form-control"/>
+                        <g:TextBox ui:field="txtFullName" width="100%" addStyleNames="form-control fs-5"/>
                     </td>
                 </tr>
 
@@ -63,7 +63,7 @@
                 <tr class="{style.tr}">
                     <td class="{style.label}">Số điện thoại:</td>
                     <td class="{style.input}">
-                        <g:TextBox ui:field="txtSoDienThoai" width="100%" addStyleNames="form-control"/>
+                        <g:TextBox ui:field="txtSoDienThoai" width="100%" addStyleNames="form-control fs-5"/>
                     </td>
                 </tr>
 
@@ -71,7 +71,7 @@
                 <tr class="{style.tr}">
                     <td class="{style.label}">Phòng ban:</td>
                     <td class="{style.input}">
-                        <g:ListBox ui:field="lbDepartment" width="100%" addStyleNames="form-select"/>
+                        <g:ListBox ui:field="lbDepartment" width="100%" addStyleNames="form-select fs-5"/>
                     </td>
                 </tr>
 
@@ -79,7 +79,7 @@
                 <tr class="{style.tr}">
                     <td class="{style.label}">Chức vụ:</td>
                     <td class="{style.input}">
-                        <g:ListBox ui:field="lbRole" width="100%" addStyleNames="form-select"/>
+                        <g:ListBox ui:field="lbRole" width="100%" addStyleNames="form-select fs-5"/>
                     </td>
                 </tr>
 
@@ -87,15 +87,15 @@
                 <tr class="{style.tr}">
                     <td class="{style.label}">Ngày gia nhập:</td>
                     <td class="{style.input}">
-                        <dp:DateBox ui:field="dateBox" width="100%" addStyleNames="form-control"/>
+                        <dp:DateBox ui:field="dateBox" width="100%" addStyleNames="form-control fs-5"/>
                     </td>
                 </tr>
 
                 <!-- Nút bấm -->
                 <tr class="{style.tr}">
                     <td colspan="2" class="{style.buttonBar}">
-                        <g:Button ui:field="btnAdd" text="Thêm mới" addStyleNames="btn btn-primary {style.btn}"/>
-                        <g:Button ui:field="btnUpdate" text="Cập nhật" addStyleNames="btn btn-success {style.btn}"/>
+                        <g:Button ui:field="btnAdd" text="Thêm mới" addStyleNames=" fs-5 btn btn-primary {style.btn}"/>
+                        <g:Button ui:field="btnUpdate" text="Cập nhật" addStyleNames=" fs-5 btn btn-success {style.btn}"/>
                     </td>
                 </tr>
             </table>

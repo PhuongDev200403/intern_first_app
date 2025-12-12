@@ -4,8 +4,6 @@ import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-//import com.google.gwt.event.dom.client.ClickEvent;
-//import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
@@ -56,13 +54,13 @@ public class FormPresenter {
 
     private final Display view;
     private final UserServiceAsync userService = GWT.create(UserService.class);
-    private final UserListPresenter userListPresenter;
+    //private final UserListPresenter userListPresenter;
 
     private UserDTO currentUser = null; // User đang được chỉnh sửa
 
-    public FormPresenter(Display view, UserListPresenter userListPresenter) {
+    public FormPresenter(Display view) {
         this.view = view;
-        this.userListPresenter = userListPresenter;
+        //this.userListPresenter = userListPresenter;
         bind();
     }
 

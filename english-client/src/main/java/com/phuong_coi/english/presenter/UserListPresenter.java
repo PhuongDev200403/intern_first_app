@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.phuong_coi.english.event.AppEventBus;
+import com.phuong_coi.english.event.UserAddedEvent;
 import com.phuong_coi.english.event.UserSelectedEvent;
 import com.phuong_coi.english.model.UserDTO;
 import com.phuong_coi.english.service.UserService;
@@ -28,6 +29,13 @@ public class UserListPresenter {
             userDetailPresenter.showDetail(userDTO);
 
             GWT.log("Đã bắt được tín hiệu click vào một dòng");
+        });
+
+        //Lắng nghe sự kiện click tạo user mới nhé 
+        AppEventBus.get().addHandler(UserAddedEvent.TYPE, event -> {
+            UserDTO userDTO = event.getUser();
+            GWT.log("Bắt sự kiện add user mới bên UserlistPresenter");
+            loadUsers();
         });
     }
 

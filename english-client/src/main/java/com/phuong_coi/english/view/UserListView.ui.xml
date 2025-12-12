@@ -4,6 +4,6 @@
     <g:VerticalPanel spacing="10" addStyleNames="p-3">
         <g:FlexTable ui:field="table" 
                      cellSpacing="10" 
-                     addStyleNames="table table-striped table-hover table-bordered shadow-sm"/>
+                     addStyleNames="table table-striped table-hover table-bordered shadow-sm fs-5"/>
     </g:VerticalPanel>
 </ui:UiBinder>

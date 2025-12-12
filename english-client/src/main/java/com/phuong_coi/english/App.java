@@ -27,7 +27,7 @@ public class App implements EntryPoint {
 	
 		UserDetailPresenter detailPresenter = new UserDetailPresenter(detailView);
 		UserListPresenter listPresenter = new UserListPresenter(listView, detailPresenter);
-		FormPresenter formPresenter = new FormPresenter(formView, listPresenter);
+		FormPresenter formPresenter = new FormPresenter(formView);
 
 		// Kết nối ngược: ListView cần biết FormPresenter để click row
 		//listView.setFormPresenter(formPresenter);

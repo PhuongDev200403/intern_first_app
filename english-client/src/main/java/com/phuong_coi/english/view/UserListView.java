@@ -11,7 +11,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Widget;
 import com.phuong_coi.english.event.AppEventBus;
-import com.phuong_coi.english.event.UserAddedEvent;
 import com.phuong_coi.english.event.UserSelectedEvent;
 import com.phuong_coi.english.event.UserUpdatedEvent;
 import com.phuong_coi.english.model.UserDTO;
@@ -24,19 +23,18 @@ public class UserListView extends Composite {
     private MyUiBinder binder = GWT.create(MyUiBinder.class);
     private static final DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy");
 
-    // private UserServiceAsync userService = GWT.create(UserService.class);
 
     @UiField
     FlexTable table;
 
-    // private FormPresenter formPresenter;
+    //private FormPresenter formPresenter;
     //private UserDetailPresenter detailPresenter;
     private int rowIndex;
 
     public UserListView() {
         initWidget(binder.createAndBindUi(this));
 
-        // Header
+        // set up header cho bảng
         table.setText(0, 0, "ID");
         table.setText(0, 1, "Họ tên");
         table.setText(0, 2, "Số ĐT");
@@ -45,7 +43,6 @@ public class UserListView extends Composite {
         table.setText(0, 5, "Ngày gia nhập");
         // table.setText(0, 6, "Thao tác");
 
-        // Click handler đúng 100% cho FlexTable
         table.addClickHandler(event -> {
 
             HTMLTable.Cell cell = table.getCellForEvent(event);
@@ -66,11 +63,11 @@ public class UserListView extends Composite {
             }
         });
 
-        AppEventBus.get().addHandler(UserAddedEvent.TYPE, event -> {
-            UserDTO userDTO = event.getUser();
-            GWT.log("lắng nghe sự kiện tạo một user mới tại userlistView.java");
-            addUserToTable(userDTO);
-        });
+        // AppEventBus.get().addHandler(UserAddedEvent.TYPE, event -> {
+        //     UserDTO userDTO = event.getUser();
+        //     GWT.log("lắng nghe sự kiện tạo một user mới tại userlistView.java");
+        //     addUserToTable(userDTO);
+        // });
 
         AppEventBus.get().addHandler(UserUpdatedEvent.TYPE, event -> {
             GWT.log("Bắt tin hiệu cập nhật user tại userListView.java");
@@ -81,7 +78,6 @@ public class UserListView extends Composite {
     }
 
     public void showUsers(List<UserDTO> employeeDTOs) {
-        // Xóa dữ liệu cũ (giữ header)
         while (table.getRowCount() > 1) {
             table.removeRow(1);
         }
@@ -95,7 +91,6 @@ public class UserListView extends Composite {
             table.setText(row, 4, u.getChucVu() != null ? u.getChucVu() : "");
             table.setText(row, 5, u.getNgayVao() != null ? fmt.format(u.getNgayVao()) : "");
 
-            // Lưu user + style
             table.getRowFormatter().getElement(row).setPropertyObject("userData", u);
             table.getRowFormatter().addStyleName(row, "clickable-row cursor-pointer");
 
@@ -128,13 +123,7 @@ public class UserListView extends Composite {
         table.getRowFormatter().addStyleName(row, "clickable-row cursor-pointer");
     }
 
-    // public void setFormPresenter(FormPresenter p) { this.formPresenter = p; }
-    // public void setDetailPopupPresenter(UserDetailPresenter p) {
-    //     this.detailPresenter = p;
-    // }
-
     public Widget asWidget() {
         return this;
     }
-
 }
