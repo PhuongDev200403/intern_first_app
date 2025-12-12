@@ -40,30 +40,30 @@
                 <table cellspacing="15" width="100%">
                     <tr class="{style.row-spacing}">
                         <td class="{style.label}">Họ tên:</td>
-                        <td><g:TextBox ui:field="txtFullName" width="100%" addStyleNames="form-control fs-5"/></td>
+                        <td><g:TextBox ui:field="txtFullName" width="100%" addStyleNames="form-control"/></td>
                     </tr>
                     <tr class="{style.row-spacing}">
                         <td class="{style.label}">Số điện thoại:</td>
-                        <td><g:TextBox ui:field="txtSoDienThoai" width="100%" addStyleNames="form-control fs-5"/></td>
+                        <td><g:TextBox ui:field="txtSoDienThoai" width="100%" addStyleNames="form-control"/></td>
                     </tr>
                     <tr class="{style.row-spacing}">
                         <td class="{style.label}">Phòng ban:</td>
-                        <td><g:ListBox ui:field="lbDepartment" width="100%" addStyleNames="form-select fs-5"/></td>
+                        <td><g:ListBox ui:field="lbDepartment" width="100%" addStyleNames="form-select"/></td>
                     </tr>
                     <tr class="{style.row-spacing}">
                         <td class="{style.label}">Chức vụ:</td>
-                        <td><g:ListBox ui:field="lbRole" width="100%" addStyleNames="form-select fs-5"/></td>
+                        <td><g:ListBox ui:field="lbRole" width="100%" addStyleNames="form-select"/></td>
                     </tr>
                     <tr class="{style.row-spacing}">
                         <td class="{style.label}">Ngày vào:</td>
-                        <td><dp:DateBox ui:field="dateBox" width="100%" addStyleNames="form-control fs-5"/></td>
+                        <td><dp:DateBox ui:field="dateBox" width="100%" addStyleNames="form-control"/></td>
                     </tr>
                     <tr class="{style.row-spacing}">
                         <td>
-                            <g:Button ui:field="btnUpdate" text="Sửa" addStyleNames="fs-5 btn btn-secondary px-5 text-primary {style.button}"></g:Button>
+                            <g:Button ui:field="btnUpdate" text="Sửa" addStyleNames="btn btn-secondary px-5 text-primary {style.button}"></g:Button>
                         </td>
                         <td>
-                            <g:Button ui:field="btnClose" text="Đóng" addStyleNames="fs-5 btn btn-secondary px-5 text-primary {style.button}"/>
+                            <g:Button ui:field="btnClose" text="Đóng" addStyleNames="btn btn-secondary px-5 text-primary {style.button}"/>
                         </td>
                     </tr>
                 </table>

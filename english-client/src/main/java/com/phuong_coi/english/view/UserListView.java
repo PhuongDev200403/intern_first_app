@@ -6,11 +6,13 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Widget;
 import com.phuong_coi.english.event.AppEventBus;
+import com.phuong_coi.english.event.UserRemoveEvent;
 import com.phuong_coi.english.event.UserSelectedEvent;
 import com.phuong_coi.english.event.UserUpdatedEvent;
 import com.phuong_coi.english.model.UserDTO;
@@ -41,7 +43,7 @@ public class UserListView extends Composite {
         table.setText(0, 3, "Phòng ban");
         table.setText(0, 4, "Chức vụ");
         table.setText(0, 5, "Ngày gia nhập");
-        // table.setText(0, 6, "Thao tác");
+        table.setText(0, 6, "Thao tác");
 
         table.addClickHandler(event -> {
 
@@ -82,17 +84,31 @@ public class UserListView extends Composite {
             table.removeRow(1);
         }
 
+        //Phát sự kiện click nút xóa
+
+
         int row = 1;
         for (UserDTO u : employeeDTOs) {
+            Button btnRemove = new Button("Xóa");
+            btnRemove.addStyleName("btn btn-danger btn-sm");
+
+            //Gắn sự kiện click cho nút xóa
+            btnRemove.addClickHandler(event -> {
+                event.stopPropagation();
+                //Sử dụng eventBus để phát tín hiêu
+                AppEventBus.get().fireEvent(new UserRemoveEvent(u));
+            });
+            
             table.setText(row, 0, u.getId().toString());
             table.setText(row, 1, u.getFullName() != null ? u.getFullName() : "");
             table.setText(row, 2, u.getSoDienThoai() != null ? u.getSoDienThoai() : "");
             table.setText(row, 3, u.getPhongBan() != null ? u.getPhongBan() : "");
             table.setText(row, 4, u.getChucVu() != null ? u.getChucVu() : "");
             table.setText(row, 5, u.getNgayVao() != null ? fmt.format(u.getNgayVao()) : "");
+            table.setWidget(row, 6, btnRemove);
 
             table.getRowFormatter().getElement(row).setPropertyObject("userData", u);
-            table.getRowFormatter().addStyleName(row, "clickable-row cursor-pointer");
+            table.getRowFormatter().addStyleName(row, "clickable-row cursor-pointer align-middle");
 
             row++;
         }

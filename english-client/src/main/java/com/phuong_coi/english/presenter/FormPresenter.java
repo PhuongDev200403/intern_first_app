@@ -17,36 +17,23 @@ import com.phuong_coi.english.validation.UserValidation;
 public class FormPresenter {
 
     public interface Display {
-        HasClickHandlers getAddButton(); // Lấy nút add ra để gắn sự kiện
+        HasClickHandlers getAddButton(); 
+        HasClickHandlers getUpdateButton();
 
-        HasClickHandlers getUpdateButton(); // Lấy nút update để gắn sự kiện
-
-        String getFullName(); // Lấy thông tin full name từ ô input
-
-        String getSoDienThoai(); // Lấy thông tin số điện thoại từ ô input
-
-        String getPhongBan(); // Lấy thông tin phong ban từ ô input
-
-        String getChucVu(); // Lấy chức vụ từ ô input
-
-        Date getNgayVao(); // Lấy ngày vào từ ô input
-
-        void setFullName(String fullName); // Gán dữ liệu lại cho ô input
-
-        void setSoDienThoai(String soDienThoai); // Gán dữ liệu số điện thoại lại cho ô input
+        String getFullName();
+        String getSoDienThoai();
+        String getPhongBan(); 
+        String getChucVu(); 
+        Date getNgayVao(); 
+        void setFullName(String fullName); 
+        void setSoDienThoai(String soDienThoai);
 
         void setPhongBan(String phongBan);
-
         void setChucVu(String chucVu);
-
         void setNgayVao(Date ngayVao);
-
         void fillUserData(UserDTO user);
-
         void clearForm();
-
         void setPhoneNumberEnabled(boolean enabled);
-
         void showMessage(String message); // alert các thông báo lỗi trên giao diện
 
         Widget asWidget(); // trả về form hiển thị thông tin
@@ -54,13 +41,11 @@ public class FormPresenter {
 
     private final Display view;
     private final UserServiceAsync userService = GWT.create(UserService.class);
-    //private final UserListPresenter userListPresenter;
 
     private UserDTO currentUser = null; // User đang được chỉnh sửa
 
     public FormPresenter(Display view) {
         this.view = view;
-        //this.userListPresenter = userListPresenter;
         bind();
     }
 
@@ -144,5 +129,4 @@ public class FormPresenter {
     public Display getDisplay() {
         return view;
     }
-
 }

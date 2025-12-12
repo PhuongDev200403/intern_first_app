@@ -7,7 +7,6 @@ public class ObjectifyJakartaFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        // Không làm gì, vì Listener đã init rồi
     }
 
     @Override

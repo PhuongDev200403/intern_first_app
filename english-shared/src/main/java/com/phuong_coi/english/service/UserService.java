@@ -11,4 +11,5 @@ public interface UserService extends RemoteService {
     UserDTO addUser(UserDTO user) throws UserException;
     UserDTO updateUser(UserDTO user, String phoneNumber) throws UserException;
     List<UserDTO> getAllUsers();
+    void removeUser(Long userId) throws UserException;
 }
