@@ -1,4 +1,4 @@
-package com.phuong_coi.english;
+package com.phuong_coi.english.servlet;
 
 import com.google.gwt.user.server.rpc.jakarta.RemoteServiceServlet;
 import com.phuong_coi.english.model.GreetingResponse;

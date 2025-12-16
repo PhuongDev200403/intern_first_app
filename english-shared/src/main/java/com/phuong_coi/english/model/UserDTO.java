@@ -12,7 +12,7 @@ public class UserDTO implements Serializable, IsSerializable {
     private String soDienThoai;
     private String phongBan;
     private String chucVu;
-    private Date ngayVao; // java.util.Date -> serializable in GWT
+    private Date ngayVao;
 
     // Constructor không tham số bắt buộc cho GWT RPC
     public UserDTO() {

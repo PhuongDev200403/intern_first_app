@@ -5,13 +5,13 @@
 
 
 <listener>
-    <listener-class>com.phuong_coi.english.ObjectifyInitListener</listener-class>
+    <listener-class>com.phuong_coi.english.util.ObjectifyInitListener</listener-class>
   </listener>
 
   <!-- Filter để tạo Objectify context cho mọi request -->
   <filter>
     <filter-name>ObjectifyFilter</filter-name>
-    <filter-class>com.phuong_coi.english.ObjectifyJakartaFilter</filter-class>
+    <filter-class>com.phuong_coi.english.util.ObjectifyJakartaFilter</filter-class>
   </filter>
   
   <filter-mapping>
@@ -23,7 +23,7 @@
 
   <servlet>
     <servlet-name>usersServlet</servlet-name>
-    <servlet-class>com.phuong_coi.english.UserServiceImpl</servlet-class>
+    <servlet-class>com.phuong_coi.english.servlet.UserServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -33,7 +33,7 @@
   
   <servlet>
     <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.phuong_coi.english.GreetingServiceImpl</servlet-class>
+    <servlet-class>com.phuong_coi.english.servlet.GreetingServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>

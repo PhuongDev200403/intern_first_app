@@ -1,4 +1,4 @@
-package com.phuong_coi.english;
+package com.phuong_coi.english.util;
 import com.google.cloud.NoCredentials;
 import com.google.cloud.ServiceOptions;
 import com.google.cloud.datastore.Datastore;

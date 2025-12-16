@@ -1,4 +1,4 @@
-package com.phuong_coi.english;
+package com.phuong_coi.english.util;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
