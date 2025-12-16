@@ -1,5 +1,6 @@
 package com.phuong_coi.english.presenter;
 
+//import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -46,11 +47,13 @@ public class UserListPresenter {
         AppEventBus.get().addHandler(UserRemoveEvent.TYPE, event ->{
             UserDTO userDTO = event.getUser();
             if (!Window.confirm("Bạn có chắc muốn xóa user: " + userDTO.getFullName() + "?")) {
+                GWT.log("Người dùng đã hủy bỏ lệnh xóa user");
                 return;
             }
             
             GWT.log("Bắt tín hiệu xóa user thành công tại UserListPresenter");
             deleteUser(userDTO);
+            
         });
     }
 
@@ -73,7 +76,7 @@ public class UserListPresenter {
             @Override
             public void onSuccess(Void result){
                 GWT.log("Xóa thành công user :");
-                loadUsers();// load lại dữ liệu
+                loadUsers();
             }
             @Override
             public void onFailure(Throwable caught){

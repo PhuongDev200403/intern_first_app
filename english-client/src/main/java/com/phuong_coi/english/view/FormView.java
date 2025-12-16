@@ -31,7 +31,7 @@ public class FormView extends Composite implements FormPresenter.Display {
     @UiField ListBox lbRole;
     @UiField DateBox dateBox;
     @UiField Button btnAdd;
-    @UiField Button btnUpdate;
+    //@UiField Button btnUpdate;
 
     public FormView() {
 
@@ -53,10 +53,10 @@ public class FormView extends Composite implements FormPresenter.Display {
         return btnAdd;
     }
 
-    @Override
-    public HasClickHandlers getUpdateButton() {
-        return btnUpdate;
-    }
+    // @Override
+    // public HasClickHandlers getUpdateButton() {
+    //     return btnUpdate;
+    // }
 
     @Override
     public String getFullName() {

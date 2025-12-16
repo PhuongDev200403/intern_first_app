@@ -95,7 +95,7 @@
                 <tr class="{style.tr}">
                     <td colspan="2" class="{style.buttonBar}">
                         <g:Button ui:field="btnAdd" text="Thêm mới" addStyleNames="btn btn-primary {style.btn}"/>
-                        <g:Button ui:field="btnUpdate" text="Cập nhật" addStyleNames="btn btn-success {style.btn}"/>
+                        <!-- <g:Button ui:field="btnUpdate" text="Cập nhật" addStyleNames="btn btn-success {style.btn}"/> -->
                     </td>
                 </tr>
             </table>

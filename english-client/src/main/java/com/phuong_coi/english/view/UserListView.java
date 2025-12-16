@@ -85,8 +85,6 @@ public class UserListView extends Composite {
         }
 
         //Phát sự kiện click nút xóa
-
-
         int row = 1;
         for (UserDTO u : employeeDTOs) {
             Button btnRemove = new Button("Xóa");
@@ -95,7 +93,7 @@ public class UserListView extends Composite {
             //Gắn sự kiện click cho nút xóa
             btnRemove.addClickHandler(event -> {
                 event.stopPropagation();
-                //Sử dụng eventBus để phát tín hiêu
+                GWT.log("Phát tín hiệu xóa user tại userlistview thành công với userId :" + u.getId());
                 AppEventBus.get().fireEvent(new UserRemoveEvent(u));
             });
             
