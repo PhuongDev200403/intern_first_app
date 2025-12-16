@@ -22,7 +22,8 @@ public class ObjectifyInitListener implements ServletContextListener {
             String projectId = System.getenv("DATASTORE_PROJECT_ID");
             
             if (emulatorHost == null) {
-                emulatorHost = System.getProperty("datastore.emulator.host");
+                // emulatorHost = System.getProperty("datastore.emulator.host");
+                emulatorHost = "localhost:8081";
             }
             if (projectId == null) {
                 projectId = System.getProperty("datastore.project_id");

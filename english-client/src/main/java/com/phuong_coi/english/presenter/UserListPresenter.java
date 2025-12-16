@@ -53,7 +53,7 @@ public class UserListPresenter {
             
             GWT.log("Bắt tín hiệu xóa user thành công tại UserListPresenter");
             deleteUser(userDTO);
-            
+
         });
     }
 
@@ -75,7 +75,7 @@ public class UserListPresenter {
         userService.removeUser(userDto.getId(),new AsyncCallback<Void>(){
             @Override
             public void onSuccess(Void result){
-                GWT.log("Xóa thành công user :");
+                GWT.log("Xóa thành công user :" + userDto.getFullName());
                 loadUsers();
             }
             @Override

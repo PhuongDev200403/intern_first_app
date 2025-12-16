@@ -1,7 +1,5 @@
 package com.phuong_coi.english.servlet;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.google.gwt.user.server.rpc.jakarta.RemoteServiceServlet;
@@ -9,12 +7,11 @@ import com.phuong_coi.english.model.UserDTO;
 import com.phuong_coi.english.service.UserService;
 import com.phuong_coi.english.util.OfyService;
 import com.phuong_coi.english.validation.UserValidation;
+import com.phuong_coi.english.daos.UserDAO;
 import com.phuong_coi.english.entity.User;
 import com.phuong_coi.english.exception.UserException;
 
 public class UserServiceImpl extends RemoteServiceServlet implements UserService {
-
-    private static final List<UserDTO> USERS = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public UserDTO addUser(UserDTO user) throws UserException {
@@ -72,14 +69,15 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
             throw new RuntimeException("User not found");
         }
 
-        User existingUser = users.get(0);
-        // Update fields
+        // list chỉ có một phần tử nên chỉ lấy phần tử đầu tiên là được
+        User existingUser = users.get(0); 
+
         existingUser.setFullName(user.getFullName());
         existingUser.setPhongBan(user.getPhongBan());
         existingUser.setChucVu(user.getChucVu());
         existingUser.setNgayVao(user.getNgayVao());
 
-        // Save to Datastore
+        // lưu vào database
         OfyService.ofy().save().entity(existingUser).now();
 
         user.setId(existingUser.getId());
@@ -93,18 +91,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
     @Override
     public List<UserDTO> getAllUsers() {
 
-        List<User> USERS = OfyService.ofy().load().type(User.class).list();
-        List<UserDTO> USERS_DTO = new ArrayList<>();
-        for (User user : USERS) {
-            UserDTO userDto = new UserDTO();
-            userDto.setId(user.getId());
-            userDto.setFullName(user.getFullName());
-            userDto.setSoDienThoai(user.getSoDienThoai());
-            userDto.setPhongBan(user.getPhongBan());
-            userDto.setChucVu(user.getChucVu());
-            userDto.setNgayVao(user.getNgayVao());
-            USERS_DTO.add(userDto);
-        }
+        List<UserDTO> USERS_DTO = UserDAO.getAllUsers();
         return USERS_DTO;
     }
 
@@ -114,7 +101,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
         if (userId == null) {
             throw new UserException("User ID cannot be null");
         }
-    
-        OfyService.ofy().delete().type(User.class).id(userId).now();
+
+        UserDAO.deleteUserById(userId);
     }
 }
