@@ -19,6 +19,10 @@ public class User {
     private String chucVu;
     private Date ngayVao;
 
+    //private Role role;
+
+
+
     // Constructor không tham số
     public User() {}
 

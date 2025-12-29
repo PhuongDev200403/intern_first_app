@@ -8,4 +8,7 @@ public interface CwConstantsList extends Constants{
 
     @DefaultStringArrayValue({"Trưởng phòng", "Nhân viên", "Giám đốc", "Phó giám đốc"})
     String[] cwConstantsRole();
+
+    @DefaultStringArrayValue({"ADMIN", "USER"})
+    String[] cwConstantsAuth();
 }

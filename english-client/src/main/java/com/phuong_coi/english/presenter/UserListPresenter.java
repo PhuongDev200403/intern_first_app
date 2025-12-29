@@ -4,7 +4,6 @@ package com.phuong_coi.english.presenter;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.phuong_coi.english.event.AppEventBus;

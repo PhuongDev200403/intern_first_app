@@ -20,6 +20,8 @@ public class ObjectifyInitListener implements ServletContextListener {
         try {
             String emulatorHost = System.getenv("DATASTORE_EMULATOR_HOST");
             String projectId = System.getenv("DATASTORE_PROJECT_ID");
+            System.out.println("host duoc lay tu bien moi truong set bang bash :" + emulatorHost);
+            System.out.println("project id duoc lay tu bien moi truong set bang bash :" + projectId);
             
             if (emulatorHost == null) {
                 // emulatorHost = System.getProperty("datastore.emulator.host");
@@ -38,8 +40,8 @@ public class ObjectifyInitListener implements ServletContextListener {
             Datastore datastore;
             
             if (emulatorHost != null && !emulatorHost.isEmpty()) {
-                System.out.println("  Mode: LOCAL EMULATOR");
                 System.out.println("  Emulator Host: " + emulatorHost);
+                System.out.println("  Mode: LOCAL EMULATOR");
                 
                 DatastoreOptions options = DatastoreOptions.newBuilder()
                     .setProjectId(projectId)

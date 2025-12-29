@@ -30,6 +30,26 @@
     <servlet-name>usersServlet</servlet-name>
     <url-pattern>/users</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>employeeServlet</servlet-name>
+    <servlet-class>com.phuong_coi.english.servlet.EmployeeServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>employeeServlet</servlet-name>
+    <url-pattern>/employee</url-pattern>
+  </servlet-mapping>
+
+<servlet>
+  <servlet-name>authServlet</servlet-name>
+  <servlet-class>com.phuong_coi.english.servlet.AuthServiceImpl</servlet-class>
+</servlet>
+
+<servlet-mapping>
+  <servlet-name>authServlet</servlet-name>
+  <url-pattern>/auth</url-pattern>
+</servlet-mapping>
   
   <servlet>
     <servlet-name>greetServlet</servlet-name>
@@ -40,9 +60,6 @@
     <servlet-name>greetServlet</servlet-name>
     <url-pattern>/greet</url-pattern>
   </servlet-mapping>
-
-  <!-- Dùng chung cho tất cả server không cần cấu hình nhiều service dẫn đến web.xml phức tạp -->
-
 
 	<!-- Default page to serve -->
   <welcome-file-list>

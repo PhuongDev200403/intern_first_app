@@ -160,7 +160,7 @@ public class FormView extends Composite implements FormPresenter.Display {
 
     @Override
     public void setNgayVao(Date ngayVao) {
-        dateBox.setValue(ngayVao); // mày đặt tên là dateBox hay checkInDate thì sửa cho khớp nhé
+        dateBox.setValue(ngayVao);
     }
 
     @Override
