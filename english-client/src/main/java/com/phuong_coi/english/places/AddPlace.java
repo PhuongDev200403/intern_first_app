@@ -5,19 +5,19 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 import com.phuong_coi.english.PlaceToken;
 
 public class AddPlace extends Place{
+    
     public AddPlace(){
-
     }
 
-    public static class Tokenizer implements PlaceTokenizer{
+    public static class Tokenizer implements PlaceTokenizer<AddPlace>{
 
         @Override
-        public Place getPlace(String token) {
+        public AddPlace getPlace(String token) {
             return new AddPlace();
         }
 
         @Override
-        public String getToken(Place place) {
+        public String getToken(AddPlace place) {
             return PlaceToken.ADD;
         }
 

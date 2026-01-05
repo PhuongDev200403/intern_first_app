@@ -5,6 +5,7 @@ import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.phuong_coi.english.entity.Employee;
 import com.phuong_coi.english.entity.User;
 
 import jakarta.servlet.ServletContextEvent;
@@ -25,7 +26,7 @@ public class ObjectifyInitListener implements ServletContextListener {
             
             if (emulatorHost == null) {
                 // emulatorHost = System.getProperty("datastore.emulator.host");
-                emulatorHost = "localhost:8081";
+                //emulatorHost = "localhost:8081";
             }
             if (projectId == null) {
                 projectId = System.getProperty("datastore.project_id");
@@ -67,6 +68,7 @@ public class ObjectifyInitListener implements ServletContextListener {
             
             // Register entities
             ObjectifyService.register(User.class);
+            ObjectifyService.register(Employee.class);
             
             System.out.println("✓ Objectify initialized successfully!");
             System.out.println("========================================");

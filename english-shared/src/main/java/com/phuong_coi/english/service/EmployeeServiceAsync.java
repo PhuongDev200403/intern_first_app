@@ -12,5 +12,9 @@ public interface EmployeeServiceAsync {
     void getAll(AsyncCallback<List<EmployeeDTO>> callback);
     void deleteEm(Long employeeId, AsyncCallback<Void> callback);
     void getByEmployeeId(Long employeeId, AsyncCallback<EmployeeDTO> callback);
+    //các phương thức mới 
+    void search(String keyword, AsyncCallback<List<EmployeeDTO>> callback);
+    void getListByRole(String keyword, AsyncCallback<List<EmployeeDTO>> callback);
+    void sortByName(AsyncCallback<List<EmployeeDTO>> callback);
 }
 

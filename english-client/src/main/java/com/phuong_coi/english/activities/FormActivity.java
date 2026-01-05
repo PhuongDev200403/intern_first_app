@@ -8,8 +8,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.phuong_coi.english.ClientFactory;
-import com.phuong_coi.english.event.EmployeeEvent;
-import com.phuong_coi.english.event.EmployeeEvent.Action;
+//import com.phuong_coi.english.event.EmployeeEvent;
+//import com.phuong_coi.english.event.EmployeeEvent.Action;
 import com.phuong_coi.english.model.EmployeeDTO;
 import com.phuong_coi.english.model.EmployeeRequest;
 import com.phuong_coi.english.places.ListPlace;
@@ -51,6 +51,7 @@ public class FormActivity extends AbstractActivity {
         }
         if (view.getPassword().isEmpty()) {
             view.showMessage("Không được để trống password");
+            return;
         }
         // Tạo nhân viên mới với dữ liệu được lấy từ form
         EmployeeRequest request = new EmployeeRequest();
@@ -71,18 +72,17 @@ public class FormActivity extends AbstractActivity {
             @Override
             public void onSuccess(EmployeeDTO result) {
                 view.showMessage("Thêm nhân viên thành công!");
-                view.clearForm(); // nếu có method này
+                view.clearForm();
 
-                eventBus.fireEvent(new EmployeeEvent(Action.CREATE, result));
+                //eventBus.fireEvent(new EmployeeEvent(Action.CREATE, result));
 
-                // Delay nhẹ để user thấy message
                 Timer timer = new Timer() {
                     @Override
                     public void run() {
-                        clientFactory.getPlaceController().goTo(new ListPlace());
+                        clientFactory.getPlaceController().goTo(new ListPlace()); //nhảy sang trang danh sách nhân viên
                     }
                 };
-                timer.schedule(1500); // 1.5 giây
+                timer.schedule(1500);
             }
 
         });

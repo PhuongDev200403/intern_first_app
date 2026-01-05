@@ -2,16 +2,21 @@ package com.phuong_coi.english.entity;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 @Entity(name = "employees")
 public class Employee {
     @Id
     private Long employeeId;
-
+    @Index
     private String fullName;
+    @Index
     private String email;
+    @Index
     private String phoneNumber;
+    @Index
     private String password;
+    @Index
     private String role;
 
     public Employee(){}

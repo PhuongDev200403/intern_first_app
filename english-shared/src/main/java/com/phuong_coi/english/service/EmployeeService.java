@@ -13,4 +13,10 @@ public interface EmployeeService extends RemoteService{
     void deleteEm(Long employeeId) throws Exception;
     List<EmployeeDTO> getAll() throws Exception;
     EmployeeDTO getByEmployeeId(Long employeeId) throws Exception;
+    //Chức năng tìm kiếm nhân viên theo tên, email, số điện thoại
+    List<EmployeeDTO> search(String keyword) throws Exception;
+    //Lọc theo quyền truy cập
+    List<EmployeeDTO> getListByRole(String keyword) throws Exception;
+    //Sắp xếp tăng dần theo tên từ Z - A
+    List<EmployeeDTO> sortByName(String keyword) throws Exception;
 }

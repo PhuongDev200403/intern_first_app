@@ -10,8 +10,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.phuong_coi.english.ClientFactory;
-import com.phuong_coi.english.event.EmployeeEvent.Action;
 import com.phuong_coi.english.event.EmployeeEvent;
+import com.phuong_coi.english.event.EmployeeEvent.Action;
 import com.phuong_coi.english.model.EmployeeDTO;
 import com.phuong_coi.english.view.EmployeeDetail;
 import com.phuong_coi.english.view.TableView;
@@ -30,6 +30,7 @@ public class ListActivity extends AbstractActivity{
     @Override
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
         view = clientFactory.getTableView();
+        this.eventBus = eventBus;
         detailView = clientFactory.getEmployeeDetail();
         view.setEventBus(eventBus);
         panel.setWidget(view.asWidget());
@@ -40,21 +41,32 @@ public class ListActivity extends AbstractActivity{
             EmployeeDTO employeeDTO = detailView.getDataFromForm();
             onBtnUpdateClicked(employeeDTO);
         });
+
         //view.getBtnRemove().addClickHandler(c -> onBtnRemoveClicked);
         //bắt sự kiện create employee
         eventBus.addHandler(EmployeeEvent.TYPE, event -> {
-            switch (event.geAction()) {
+            switch (event.getAction()) {
                 case CREATE:
                     GWT.log("Nhân viên mới được tạo và reload bảng");
-                    loadEmployees(); // reload toàn bộ
+                    loadEmployees(); //reload toàn bộ
                     break;
-                case UPDATE:
+                case CLICK:
                     detailView.showDetail(event.getEmployee());
+                    GWT.log("Load dữ liệu bảng trước khi cập nhật dữ liệu mới");
                     break;
                 case DELETE:
                     GWT.log("Nhân viên bị xóa và reload bảng");
                     onBtnRemoveClicked(event.getEmployee());
                     break;
+                case SEARCH:
+                    onSearch();
+                    break;
+                case UPDATE:
+                    GWT.log("Bắt được tín hiệu cập nhật nhân viên và reload lại bảng");
+                    loadEmployees();
+                    break;
+                case FILTER:
+                    onFilterByRole();
                 default:
                     break;
             }
@@ -82,9 +94,11 @@ public class ListActivity extends AbstractActivity{
 
         if (detailView.getFullName().isEmpty()) {
             Window.alert("tên nhân viên không được để trống nhé");
+            return;
         }
         if (detailView.getRole().isEmpty()) {
             Window.alert("Quyền truy cập không được để trống");
+            return;
         }
 
         em.setFullName(detailView.getFullName());
@@ -102,7 +116,9 @@ public class ListActivity extends AbstractActivity{
                 Window.alert("Cập nhật thông tin nhân viên thành công");
                 // đóng popup
                 detailView.hide();
-                loadEmployees();
+                //fire event 
+                eventBus.fireEvent(new EmployeeEvent(Action.UPDATE, result));
+                GWT.log("Cập nhật dữ liệu sau khi đã cập nhật thành công nhân viên");
             }
         });
     }
@@ -116,7 +132,7 @@ public class ListActivity extends AbstractActivity{
                 public void onSuccess(Void result) {
                     Window.alert("Xóa thành công");
                     loadEmployees(); // reload bảng
-                    eventBus.fireEvent(new EmployeeEvent(Action.DELETE, em)); // optional
+                    //eventBus.fireEvent(new EmployeeEvent(Action.DELETE, em)); // optional
                 }
                 @Override
                 public void onFailure(Throwable caught) {
@@ -124,5 +140,63 @@ public class ListActivity extends AbstractActivity{
                 }
             });
         }
+    }
+
+    //logic cho bộ lọc nhân viên
+    //Tìm kiếm nhân viên theo tên, theo email, theo số điện thoại
+    private void onSearch(){
+        String keyword = view.getSearch();
+
+        if (keyword.isEmpty()) {
+            loadEmployees();
+            return;
+        }
+
+        //Call RPC 
+        clientFactory.getEmployeeService().search(keyword, new AsyncCallback<List<EmployeeDTO>>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                view.showMessage("Có lỗi xảy ra trong quá trình tìm kiếm");
+            }
+
+            @Override
+            public void onSuccess(List<EmployeeDTO> result) {
+                GWT.log("Thành công tìm kiếm từ khóa :" + keyword);
+                // Bỏ alert message, để TableView tự xử lý empty state
+                view.showEmployees(result);
+            }
+            
+        });
+    }
+
+    public void onFilterByRole(){
+        String keyword = view.getValueInListBox(); //lấy giá trị đang có trong  list box
+
+        GWT.log("Lọc theo :" + keyword);
+        
+        if(keyword == null || keyword.isEmpty()){
+            loadEmployees();
+        }
+
+        //Call rpc
+        clientFactory.getEmployeeService().getListByRole(keyword, new AsyncCallback<List<EmployeeDTO>>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                view.showMessage("Lỗi khi lọc nhân viên theo quyền truy cập");
+            }
+
+            @Override
+            public void onSuccess(List<EmployeeDTO> result) {
+                GWT.log("Lọc thành công :" + result);
+                view.showEmployees(result);
+            }
+            
+        });
+    }
+
+    private void onSortByName(){
+        
     }
 }

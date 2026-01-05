@@ -11,13 +11,14 @@ public class EmployeeEvent extends GwtEvent<EmployeeEvent.Handler>{
     }
 
     public enum Action{
-        CREATE, UPDATE, DELETE, VIEW
+        CREATE, UPDATE, DELETE, SEARCH, CLICK, FILTER
     }
 
     public static Type<Handler> TYPE = new Type<>();
 
     private Action action;
     private EmployeeDTO employee;
+    private String keyword;
     @Override
     public Type<Handler> getAssociatedType() {
         return TYPE;
@@ -26,6 +27,10 @@ public class EmployeeEvent extends GwtEvent<EmployeeEvent.Handler>{
     public EmployeeEvent(Action action, EmployeeDTO employee){
         this.action = action;
         this.employee = employee;
+    }
+    public EmployeeEvent(Action action, String keyword){
+        this.action = action;
+        this.keyword = keyword;
     }
 
     public EmployeeEvent(Action action){
@@ -38,8 +43,12 @@ public class EmployeeEvent extends GwtEvent<EmployeeEvent.Handler>{
         handler.onEmployeeEvent(this);
     }
     
-    public Action geAction(){
+    public Action getAction(){
         return action;
+    }
+
+    public String getKeyword(){
+        return keyword;
     }
 
     public EmployeeDTO getEmployee(){

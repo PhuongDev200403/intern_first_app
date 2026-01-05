@@ -5,17 +5,18 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 import com.phuong_coi.english.PlaceToken;
 
 public class ListPlace extends Place{
-    public static class Tokenizer implements PlaceTokenizer {
+
+    public ListPlace(){}
+    public static class Tokenizer implements PlaceTokenizer<ListPlace>{
 
         @Override
-        public Place getPlace(String token) {
-           return new ListPlace();
+        public ListPlace getPlace(String token) {
+            return new ListPlace();
         }
-
+        
         @Override
-        public String getToken(Place place) {
+        public String getToken(ListPlace place) {
             return PlaceToken.LIST;
         }
-    
     }
 }

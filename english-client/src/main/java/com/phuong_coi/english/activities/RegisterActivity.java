@@ -7,8 +7,8 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.phuong_coi.english.ClientFactory;
-import com.phuong_coi.english.event.AuthActionEvent;
-import com.phuong_coi.english.event.AuthActionEvent.Action;
+//import com.phuong_coi.english.event.AuthActionEvent;
+//import com.phuong_coi.english.event.AuthActionEvent.Action;
 import com.phuong_coi.english.model.EmployeeDTO;
 import com.phuong_coi.english.model.EmployeeRequest;
 import com.phuong_coi.english.places.LoginPlace;
@@ -67,7 +67,7 @@ public class RegisterActivity extends AbstractActivity{
                 //thành công thì fire event và đổi sang màn đăng nhập
                 GWT.log("Đăng ký thành công nhân viên mới :" + result);
                 //fire event đăng ký thành công thì bay sang trang đăng nhập
-                eventBus.fireEvent(new AuthActionEvent(Action.Register, result));
+                //eventBus.fireEvent(new AuthActionEvent(Action.Register, result));
                 clientFactory.getPlaceController().goTo(new LoginPlace());
             }
         });

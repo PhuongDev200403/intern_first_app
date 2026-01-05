@@ -15,7 +15,7 @@ import com.phuong_coi.english.constants.CwConstantsList;
 
 public class FormRegisterView extends Composite {
     interface FormRegisterUiBinder extends UiBinder<Widget, FormRegisterView>{};
-    public FormRegisterUiBinder formRegisterUiBinder = GWT.create(FormRegisterUiBinder.class);
+    private FormRegisterUiBinder formRegisterUiBinder = GWT.create(FormRegisterUiBinder.class);
 
     private final CwConstantsList cwConstantsList = GWT.create(CwConstantsList.class);
 
@@ -24,7 +24,7 @@ public class FormRegisterView extends Composite {
     @UiField PasswordTextBox txtPassword;
     @UiField Button btnRegister;
     @UiField TextBox txtPhoneNumber;
-    @UiField ListBox lbRole = new ListBox(isVisible());
+    @UiField ListBox lbRole;
 
     public FormRegisterView(){
         initWidget(formRegisterUiBinder.createAndBindUi(this));
@@ -34,6 +34,8 @@ public class FormRegisterView extends Composite {
         for (String role : roles) {
             lbRole.addItem(role);
         }
+
+        GWT.log("Form đăng ký đã được load");
     }
 
     //Các hành vi khác có trong form đăng ký để activities có thể gọi qua view

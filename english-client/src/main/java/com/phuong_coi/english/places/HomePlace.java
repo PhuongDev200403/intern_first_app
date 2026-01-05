@@ -9,7 +9,8 @@ public class HomePlace extends Place{
     public HomePlace(){
     }
 
-    public static class Tokenizer implements PlaceTokenizer<HomePlace> {
+    
+    public static class Tokenizer implements PlaceTokenizer<HomePlace>{
 
         @Override
         public HomePlace getPlace(String token) {
@@ -19,6 +20,8 @@ public class HomePlace extends Place{
         @Override
         public String getToken(HomePlace place) {
             return PlaceToken.HOME;
+
         }
+        
     }
 }

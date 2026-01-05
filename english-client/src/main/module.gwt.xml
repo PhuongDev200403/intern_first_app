@@ -5,8 +5,12 @@
   <inherits name="com.google.gwt.user.theme.clean.Clean" />
 
   <!-- BỎ DẤU # TRÊN URL - DÒNG QUAN TRỌNG NHẤT -->
-  <!-- <set-configuration-property name="gwt.pushstate.enabled" value="true" /> -->
-  <!-- <set-configuration-property name="gwt.html5HistorySupport" value="true" /> -->
+  <!-- <set-configuration-property name="gwt.pushstate.enabled" value="true" />
+  <set-configuration-property name="gwt.html5HistorySupport" value="true" /> -->
+  
+  <inherits name="com.google.gwt.activity.Activity" />
+
+  <!-- <inherits name="org.gwtbootstrap3.GwtBootstrap3"/> -->
 
   <source path="" />
 

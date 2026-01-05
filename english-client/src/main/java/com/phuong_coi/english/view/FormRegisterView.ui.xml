@@ -55,7 +55,7 @@
                 <tr class="{style.tr}">
                     <td class="{style.label}">Họ tên:</td>
                     <td class="{style.input}">
-                        <g:TextBox ui:field="txtFullName" width="100%" addStyleNames="form-control" placeholder="Nguyễn Văn Phương" />
+                        <g:TextBox ui:field="txtFullName" width="100%" addStyleNames="form-control"/>
                     </td>
                 </tr>
 
@@ -63,14 +63,14 @@
                 <tr class="{style.tr}">
                     <td class="{style.label}">Số điện thoại:</td>
                     <td class="{style.input}">
-                        <g:TextBox ui:field="txtPhoneNumber" width="100%" addStyleNames="form-control" placeholder="0327391502" />
+                        <g:TextBox ui:field="txtPhoneNumber" width="100%" addStyleNames="form-control"/>
                     </td>
                 </tr>
 
                 <tr class="{style.tr}">
                     <td class="{style.label}">Email:</td>
                     <td class="{style.input}">
-                        <g:TextBox ui:field="txtEmail" width="100%" addStyleNames="form-control" placeholder="phuongnguyen20403@gmail.com" />
+                        <g:TextBox ui:field="txtEmail" width="100%" addStyleNames="form-control"/>
                     </td>
                 </tr>
 
@@ -92,7 +92,7 @@
                 <!-- Nút bấm -->
                 <tr class="{style.tr}">
                     <td colspan="2" class="{style.buttonBar}">
-                        <g:Button ui:field="btnAdd" text="Đăng ký" addStyleNames="btn btn-primary {style.btn}"/>
+                        <g:Button ui:field="btnRegister" text="Đăng ký" addStyleNames="btn btn-primary {style.btn}"/>
                         <!-- <g:Button ui:field="btnUpdate" text="Cập nhật" addStyleNames="btn btn-success {style.btn}"/> -->
                     </td>
                 </tr>

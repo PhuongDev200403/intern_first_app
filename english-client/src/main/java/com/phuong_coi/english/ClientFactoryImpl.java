@@ -12,6 +12,7 @@ import com.phuong_coi.english.view.EmployeeDetail;
 import com.phuong_coi.english.view.Form;
 import com.phuong_coi.english.view.FormLoginView;
 import com.phuong_coi.english.view.FormRegisterView;
+import com.phuong_coi.english.view.Home;
 import com.phuong_coi.english.view.TableView;
 
 public class ClientFactoryImpl implements ClientFactory{
@@ -22,6 +23,8 @@ public class ClientFactoryImpl implements ClientFactory{
     private Form form;
     private TableView tableView;
     private EmployeeDetail employeeDetail;
+    private Home home;
+
 
     private AuthServiceAsync authService = GWT.create(AuthService.class);
     private EmployeeServiceAsync employeeService = GWT.create(EmployeeService.class);
@@ -40,6 +43,7 @@ public class ClientFactoryImpl implements ClientFactory{
     public EventBus getEventBus() {
        return eventBus;
     }
+
 
     @Override
     public FormLoginView getFormLogin() {
@@ -77,8 +81,18 @@ public class ClientFactoryImpl implements ClientFactory{
 
     @Override
     public EmployeeDetail getEmployeeDetail() {
-        employeeDetail = new EmployeeDetail();
+        if (employeeDetail == null) {
+            employeeDetail = new EmployeeDetail();
+        }
         return employeeDetail;
+    }
+
+    @Override
+    public Home getHome() {
+        if (home == null) {
+            home = new Home();
+        }
+        return home;
     }
     
 }

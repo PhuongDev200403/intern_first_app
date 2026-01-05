@@ -7,10 +7,11 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.phuong_coi.english.ClientFactory;
-import com.phuong_coi.english.event.AuthActionEvent;
-import com.phuong_coi.english.event.AuthActionEvent.Action;
+//import com.phuong_coi.english.event.AuthActionEvent;
+//import com.phuong_coi.english.event.AuthActionEvent.Action;
 import com.phuong_coi.english.model.EmployeeDTO;
 import com.phuong_coi.english.places.HomePlace;
+import com.phuong_coi.english.places.RegisterPlace;
 import com.phuong_coi.english.view.FormLoginView;
 
 public class LoginActivity extends AbstractActivity{
@@ -35,6 +36,7 @@ public class LoginActivity extends AbstractActivity{
         view = clientFactory.getFormLogin();
         panel.setWidget(view.asWidget());
         view.getBtnLogin().addClickHandler(event -> onLogin());
+        view.getBtnRegister().addClickHandler(event -> onRegister());
     }
     
 
@@ -43,17 +45,19 @@ public class LoginActivity extends AbstractActivity{
         //Kiểm tra tính hợp lệ của dữ liệu
         if(view.getEmail() == null || view.getEmail().isEmpty()){
             view.showMessageError("Email không được để trống");
+            return;
         }
 
         if(view.getPassword() == null || view.getPassword().isEmpty()){
             view.showMessageError("Password không được để trống");
+            return;
         }
 
         clientFactory.getAuthService().login(view.getEmail(), view.getPassword(), new AsyncCallback<EmployeeDTO>() {
             @Override
             public void onSuccess(EmployeeDTO result) {
                 GWT.log("Phát tín hiệu nút đăng nhập được click thành công tại LoginActivities");
-                eventBus.fireEvent(new AuthActionEvent(Action.Login, result));
+                //eventBus.fireEvent(new AuthActionEvent(Action.Login, result));
                 // nếu đúng email và password đúng thì đều vào trang homepage
                 GWT.log("Người dùng :" + result.getFullName() + " Đang đăng nhập");
                 clientFactory.getPlaceController().goTo(new HomePlace());
@@ -64,5 +68,10 @@ public class LoginActivity extends AbstractActivity{
                 view.showMessageError("Đăng nhập thất bại: " + caught.getMessage());
             }
         });
+    }
+
+    //Sự kiện click nút đăng ký
+    private void onRegister(){
+        clientFactory.getPlaceController().goTo(new RegisterPlace());
     }
 }

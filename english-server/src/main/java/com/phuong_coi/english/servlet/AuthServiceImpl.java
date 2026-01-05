@@ -15,31 +15,35 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 
     @Override
     public EmployeeDTO login(String email, String password) throws LoginException {
-        //kiểm tra xem tài khoản có tồn tại không
-        //vì email là duy nhất nên tìm email thấy lần đầu tiên là được
-        Employee employee = OfyService.ofy().load().type(Employee.class)
-                                            .filter("email", email).first().now(); 
-        //khi tìm thấy thì kiểm tra xem có đúng mật khẩu hay không
-        if (!employee.getPassword().equals(password)) {
-            throw new LoginException("Thông tin tài khoản và mật khẩu không chính xác");
+        if (email == null || email.trim().isEmpty() || password == null || password.isEmpty()) {
+            throw new LoginException("Email và mật khẩu không được để trống");
         }
 
-        //Lưu vào session
-        // HttpServletRequest request = getThreadLocalRequest();
-        // HttpSession session = request.getSession(true);
-        // session.setAttribute("currentUserId", employee.getId());
-        // session.setMaxInactiveInterval(30 * 60);
+        // Tìm employee theo email
+        Employee employee = OfyService.ofy().load().type(Employee.class)
+                .filter("email", email.trim())
+                .first().now();
 
-        // đăng nhập đúng thì vào trang chủ
+        System.out.println("Current employee :" + employee.getFullName());
+        // Nếu không tìm thấy → báo lỗi rõ ràng
+        if (employee == null) {
+            throw new LoginException("Email không tồn tại trong hệ thống");
+        }
 
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setEmployeeId(employee.getId());
-        employeeDTO.setFullName(employee.getFullName());
-        employeeDTO.setEmail(email);
-        employeeDTO.setPhoneNumber(employee.getPhoneNumber());
-        employeeDTO.setRole(employee.getRole().toString());
+        // Kiểm tra mật khẩu (hiện tại đang lưu plain text – cảnh báo sau)
+        if (!employee.getPassword().equals(password)) {
+            throw new LoginException("Mật khẩu không chính xác");
+        }
 
-        return employeeDTO;
+        // Đăng nhập thành công → chuyển sang DTO
+        EmployeeDTO dto = new EmployeeDTO();
+        dto.setEmployeeId(employee.getId());
+        dto.setFullName(employee.getFullName());
+        dto.setEmail(employee.getEmail());
+        dto.setPhoneNumber(employee.getPhoneNumber());
+        dto.setRole(employee.getRole().toString());
+
+        return dto;
     }
 
     @Override
@@ -71,7 +75,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 
         //lưu vào db
         OfyService.ofy().save().entity(newEm).now();
-
+        System.out.println("Đăng ký thành công nhân viên mới :" + emDto.getFullName());
         //Đăng ký thành công chuyển đến trang đăng nhập
         return emDto;
     }

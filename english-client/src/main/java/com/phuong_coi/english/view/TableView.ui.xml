@@ -1,9 +1,135 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-    <g:VerticalPanel spacing="10" addStyleNames="p-3">
-        <g:FlexTable ui:field="table" 
-                     cellSpacing="10" 
-                     addStyleNames="table table-striped table-hover table-bordered shadow-sm"/>
-    </g:VerticalPanel>
+        <ui:style>
+        .tableContainer {
+            padding: 16px;
+            <!-- background-color: #f9f9f9; -->
+            min-height: 100vh; 
+        }
+    
+        .searchContainer {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+    
+        .searchBox {
+            width: 420px;
+            max-width: 100%;
+            padding: 14px 18px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 12px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+    
+        .searchBox:focus {
+            outline: none;
+            border-color: #4d90fe;
+            box-shadow: 0 0 0 4px rgba(77, 144, 254, 0.2);
+            transform: translateY(-1px);
+        }
+    
+        .fullWidth {
+            width: 100% !important;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden; /* để shadow bo tròn */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .fullWidthTable {
+            width: 100% !important;
+            table-layout: fixed; 
+        }
+    
+        .emptyContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 480px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px dashed #adb5bd;
+            border-radius: 20px;
+            padding: 50px 30px;
+            margin: 0; /* bỏ margin thừa */
+            text-align: center;
+            color: #495057;
+        }
+    
+        .emptyIcon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            opacity: 0.8;
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .emptyTitle {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #212529;
+        }
+        .emptyText {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+    
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 6px;
+        }
+        .right-panel{
+            float: right !important;
+            display: flex;
+            margin-top: 10px;
+        }
+        .label{
+            margin-top: 4px;
+            margin-right: 10px;
+        }
+        .panel{
+            display: flex;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.tableContainer}">
+        <!-- Ô tìm kiếm và bộ lọc theo quyền truy cập -->
+        <g:HTMLPanel addStyleNames="{style.searchContainer}">
+            <g:TextBox ui:field="txtSearch"
+                       addStyleNames="{style.searchBox}"/>
+            <g:HTMLPanel addStyleNames="{style.right-panel}">
+                <g:Label addStyleNames="fs-5 {style.label}">Filter</g:Label>
+                <g:ListBox ui:field="filterByRole" addStyleNames="form-select"></g:ListBox>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
+            
+        <g:HTMLPanel addStyleNames="mb-2 {style.panel}">
+            <g:Label addStyleNames="{style.label} fs-5">Sort</g:Label>
+            <g:ListBox ui:field="sortByName" addStyleNames="form-select"></g:ListBox>
+        </g:HTMLPanel>
+        <!-- Thông báo khi danh sách rỗng -->
+        <g:HTMLPanel ui:field="emptyMessagePanel" addStyleNames="{style.emptyContainer}">
+            <div class="{style.emptyIcon}">📋</div>
+            <div class="{style.emptyTitle}">Chưa có nhân viên nào</div>
+            <div class="{style.emptyText}">
+                Danh sách nhân viên hiện đang trống.<br/>
+                Hãy thêm nhân viên đầu tiên để bắt đầu!
+            </div>
+        </g:HTMLPanel>
+
+        <!-- Bảng nhân viên -->
+        <g:FlexTable ui:field="table"
+                     cellSpacing="50"
+                     addStyleNames="{style.fullWidth} {style.fullWidthTable} table table-layout table-striped table-hover table-bordered shadow-sm"/>
+    </g:HTMLPanel>
 </ui:UiBinder>

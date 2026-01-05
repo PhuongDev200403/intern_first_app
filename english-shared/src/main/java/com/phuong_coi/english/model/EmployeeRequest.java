@@ -1,6 +1,10 @@
 package com.phuong_coi.english.model;
 
-public class EmployeeRequest {
+import java.io.Serializable;
+
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+public class EmployeeRequest implements Serializable, IsSerializable{
     private String fullName;
     private String phoneNumber;
     private String email;

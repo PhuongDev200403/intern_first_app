@@ -5,6 +5,8 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.phuong_coi.english.ClientFactory;
+import com.phuong_coi.english.places.AddPlace;
+import com.phuong_coi.english.places.ListPlace;
 import com.phuong_coi.english.view.Home;
 
 public class HomeActivity extends AbstractActivity{
@@ -20,7 +22,17 @@ public class HomeActivity extends AbstractActivity{
     }
     @Override
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
+        view = clientFactory.getHome();
+        panel.setWidget(view.asWidget());
         
+        // Handle button clicks
+        view.getBtnAdd().addClickHandler(e -> 
+            clientFactory.getPlaceController().goTo(new AddPlace())
+        );
+        
+        view.getBtnView().addClickHandler(e -> 
+            clientFactory.getPlaceController().goTo(new ListPlace())
+        );
     }
     
 }

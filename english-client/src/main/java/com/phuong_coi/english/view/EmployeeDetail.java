@@ -21,7 +21,6 @@ public class EmployeeDetail extends Composite{
     @UiField TextBox txtFullName;
     @UiField TextBox txtSoDienThoai;
     @UiField TextBox txtEmail;
-    @UiField TextBox txtPassword;
     @UiField ListBox lbRole = new ListBox(false);
     @UiField Button btnClose;
     @UiField Button btnUpdate;
@@ -135,6 +134,7 @@ public class EmployeeDetail extends Composite{
         if(employee == null){
             return;
         }
+        setId(employee.getEmployeeId().toString());
         setEmail(employee.getEmail());
         setFullName(employee.getFullName());
         setSoDienThoai(employee.getPhoneNumber());
@@ -145,7 +145,7 @@ public class EmployeeDetail extends Composite{
     }
 
     public EmployeeDTO getDataFromForm(){
-        EmployeeDTO currentUser = null;
+        EmployeeDTO currentUser = new EmployeeDTO();
         currentUser.setEmployeeId(Long.parseLong(getId()));
         currentUser.setFullName(getFullName());
         currentUser.setEmail(getEmail());

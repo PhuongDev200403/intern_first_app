@@ -76,7 +76,7 @@
                 </tr>
 
                 <tr class="{style.tr}">
-                    <td class="{style.label}"></td>
+                    <td class="{style.label}">Password</td>
                     <td class="{style.label}">
                         <g:TextBox ui:field="txtPassword" width="100%" addStyleNames="form-control" />
                     </td>
@@ -84,7 +84,7 @@
 
                 <!-- Chức vụ -->
                 <tr class="{style.tr}">
-                    <td class="{style.label}">Chức vụ:</td>
+                    <td class="{style.label}">Quyền truy cập:</td>
                     <td class="{style.input}">
                         <g:ListBox ui:field="lbRole" width="100%" addStyleNames="form-select"/>
                     </td>

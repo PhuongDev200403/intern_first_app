@@ -1,6 +1,5 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-        xmlns:g="urn:import:com.google.gwt.user.client.ui"
-        xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
+        xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
     <ui:style>
         .popupContent {
@@ -53,15 +52,11 @@
                     </tr>
                     <tr class="{style.row-spacing}">
                         <td class="{style.label}">Email:</td>
-                        <td><g:TextBox ui:field="txtEmail" width="100%" addStyleNames="form-select"/></td>
+                        <td><g:TextBox ui:field="txtEmail" width="100%" addStyleNames="form-control"/></td>
                     </tr>
-                    <!-- <tr class="{style.row-spacing}">
-                        <td class="{style.label}">Password:</td>
-                        <td><g:TextBox ui:field="txtPassword" width="100%" addStyleNames="form-select"/></td>
-                    </tr> -->
                     <tr class="{style.row-spacing}">
                         <td class="{style.label}">Quyền truy cập:</td>
-                        <td><dp:ListBox ui:field="lbRole" width="100%" addStyleNames="form-control"/></td>
+                        <td><g:ListBox ui:field="lbRole" width="100%" addStyleNames="form-control"/></td>
                     </tr>
                     <tr class="{style.row-spacing}">
                         <td>
