@@ -9,6 +9,7 @@ import com.phuong_coi.english.service.AuthServiceAsync;
 import com.phuong_coi.english.service.EmployeeService;
 import com.phuong_coi.english.service.EmployeeServiceAsync;
 import com.phuong_coi.english.view.EmployeeDetail;
+import com.phuong_coi.english.view.EmployeeTableView;
 import com.phuong_coi.english.view.Form;
 import com.phuong_coi.english.view.FormLoginView;
 import com.phuong_coi.english.view.FormRegisterView;
@@ -22,6 +23,7 @@ public class ClientFactoryImpl implements ClientFactory{
     private FormRegisterView formRegister;
     private Form form;
     private TableView tableView;
+    private EmployeeTableView employeeTableView;
     private EmployeeDetail employeeDetail;
     private Home home;
 
@@ -77,6 +79,14 @@ public class ClientFactoryImpl implements ClientFactory{
     public TableView getTableView() {
         tableView = new TableView();
         return tableView;
+    }
+
+    @Override
+    public EmployeeTableView getEmployeeTableView() {
+        if (employeeTableView == null) {
+            employeeTableView = new EmployeeTableView();
+        }
+        return employeeTableView;
     }
 
     @Override

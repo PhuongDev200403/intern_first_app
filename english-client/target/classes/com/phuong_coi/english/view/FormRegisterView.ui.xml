@@ -1,0 +1,102 @@
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
+             
+    <ui:style>
+        .card {
+            width: 460px;
+            margin: 30px auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+
+        }
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+        .label {
+            font-weight: bold;
+            color: #34495e;
+            padding-right: 15px;
+            width: 140px;
+        }
+        .tr{
+            height: 48px;     
+            vertical-align: middle;
+        }
+        .input {
+            width: 240px;
+        }
+        .buttonBar {
+            text-align: right;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .btn {
+            min-width: 100px;
+            margin-left: 12px;
+            border-radius: 4px;
+            color: black;
+        }
+    </ui:style>
+
+    <g:HTMLPanel>
+        <div class="{style.card}">
+            <div class="{style.title}">Đăng ký</div>
+
+            <table cellspacing="12" width="100%">
+                <!-- Họ tên -->
+                <tr class="{style.tr}">
+                    <td class="{style.label}">Họ tên:</td>
+                    <td class="{style.input}">
+                        <g:TextBox ui:field="txtFullName" width="100%" addStyleNames="form-control"/>
+                    </td>
+                </tr>
+
+                <!-- Số điện thoại -->
+                <tr class="{style.tr}">
+                    <td class="{style.label}">Số điện thoại:</td>
+                    <td class="{style.input}">
+                        <g:TextBox ui:field="txtPhoneNumber" width="100%" addStyleNames="form-control"/>
+                    </td>
+                </tr>
+
+                <tr class="{style.tr}">
+                    <td class="{style.label}">Email:</td>
+                    <td class="{style.input}">
+                        <g:TextBox ui:field="txtEmail" width="100%" addStyleNames="form-control"/>
+                    </td>
+                </tr>
+
+                <tr class="{style.tr}">
+                    <td class="{style.label}">Mật khẩu:</td>
+                    <td class="{style.input}">
+                        <g:PasswordTextBox ui:field="txtPassword" width="100%" addStyleNames="form-control"/>
+                    </td>
+                </tr>
+
+                <!-- Chức vụ -->
+                <tr class="{style.tr}">
+                    <td class="{style.label}">Quyền truy cập</td>
+                    <td class="{style.input}">
+                        <g:ListBox ui:field="lbRole" width="100%" addStyleNames="form-select"/>
+                    </td>
+                </tr>
+
+                <!-- Nút bấm -->
+                <tr class="{style.tr}">
+                    <td colspan="2" class="{style.buttonBar}">
+                        <g:Button ui:field="btnRegister" text="Đăng ký" addStyleNames="btn btn-primary {style.btn}"/>
+                        <!-- <g:Button ui:field="btnUpdate" text="Cập nhật" addStyleNames="btn btn-success {style.btn}"/> -->
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>

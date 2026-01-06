@@ -11,7 +11,7 @@ public class EmployeeEvent extends GwtEvent<EmployeeEvent.Handler>{
     }
 
     public enum Action{
-        CREATE, UPDATE, DELETE, SEARCH, CLICK, FILTER
+        CREATE, UPDATE, DELETE, DELETE_MULTIPLE, SEARCH, CLICK, FILTER, SORT
     }
 
     public static Type<Handler> TYPE = new Type<>();
@@ -19,9 +19,15 @@ public class EmployeeEvent extends GwtEvent<EmployeeEvent.Handler>{
     private Action action;
     private EmployeeDTO employee;
     private String keyword;
+    private Object data; 
     @Override
     public Type<Handler> getAssociatedType() {
         return TYPE;
+    }
+
+    public EmployeeEvent(Action action, Object data){
+        this.action = action;
+        this.data = data;
     }
 
     public EmployeeEvent(Action action, EmployeeDTO employee){
@@ -34,7 +40,6 @@ public class EmployeeEvent extends GwtEvent<EmployeeEvent.Handler>{
     }
 
     public EmployeeEvent(Action action){
-        //constructor sử dụng cho phương thức xóa và không cần trả về EmployeeDTO
         this.action = action;
     }
 
@@ -53,5 +58,9 @@ public class EmployeeEvent extends GwtEvent<EmployeeEvent.Handler>{
 
     public EmployeeDTO getEmployee(){
         return employee;
+    }
+
+    public Object getData(){
+        return data;
     }
 }

@@ -5,6 +5,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.phuong_coi.english.service.AuthServiceAsync;
 import com.phuong_coi.english.service.EmployeeServiceAsync;
 import com.phuong_coi.english.view.EmployeeDetail;
+import com.phuong_coi.english.view.EmployeeTableView;
 import com.phuong_coi.english.view.Form;
 import com.phuong_coi.english.view.FormLoginView;
 import com.phuong_coi.english.view.FormRegisterView;
@@ -18,6 +19,7 @@ public interface ClientFactory {
     public FormRegisterView getFormRegister();
     public Form getForm();
     public TableView getTableView();
+    public EmployeeTableView getEmployeeTableView();
     public EmployeeDetail getEmployeeDetail();
     public Home getHome();
 

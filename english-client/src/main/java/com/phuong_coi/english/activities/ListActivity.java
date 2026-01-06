@@ -14,14 +14,16 @@ import com.phuong_coi.english.event.EmployeeEvent;
 import com.phuong_coi.english.event.EmployeeEvent.Action;
 import com.phuong_coi.english.model.EmployeeDTO;
 import com.phuong_coi.english.view.EmployeeDetail;
-import com.phuong_coi.english.view.TableView;
+import com.phuong_coi.english.view.EmployeeTableView;
 
 public class ListActivity extends AbstractActivity{
     private ClientFactory clientFactory;
     private Place place;
     private EventBus eventBus;
 
-    private TableView view;
+    // OLD LOGIC - COMMENTED OUT
+    // private TableView view;
+    private EmployeeTableView view; // NEW: Using CellTable
     private EmployeeDetail detailView;
 
     public ListActivity(ClientFactory clientFactory){
@@ -29,7 +31,9 @@ public class ListActivity extends AbstractActivity{
     }
     @Override
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
-        view = clientFactory.getTableView();
+        // OLD LOGIC - COMMENTED OUT
+        // view = clientFactory.getTableView();
+        view = clientFactory.getEmployeeTableView(); // NEW: Using CellTable
         this.eventBus = eventBus;
         detailView = clientFactory.getEmployeeDetail();
         view.setEventBus(eventBus);
@@ -42,13 +46,11 @@ public class ListActivity extends AbstractActivity{
             onBtnUpdateClicked(employeeDTO);
         });
 
-        //view.getBtnRemove().addClickHandler(c -> onBtnRemoveClicked);
-        //bắt sự kiện create employee
         eventBus.addHandler(EmployeeEvent.TYPE, event -> {
             switch (event.getAction()) {
                 case CREATE:
                     GWT.log("Nhân viên mới được tạo và reload bảng");
-                    loadEmployees(); //reload toàn bộ
+                    loadEmployees();
                     break;
                 case CLICK:
                     detailView.showDetail(event.getEmployee());
@@ -58,7 +60,12 @@ public class ListActivity extends AbstractActivity{
                     GWT.log("Nhân viên bị xóa và reload bảng");
                     onBtnRemoveClicked(event.getEmployee());
                     break;
+                case DELETE_MULTIPLE: 
+                    GWT.log("Xóa nhiều nhân viên");
+                    onBtnRemoveMultipleClicked((List<EmployeeDTO>) event.getData());
+                    break;
                 case SEARCH:
+                    GWT.log("Bắt được tín hiệu tìm kiếm nhân viên");
                     onSearch();
                     break;
                 case UPDATE:
@@ -66,7 +73,12 @@ public class ListActivity extends AbstractActivity{
                     loadEmployees();
                     break;
                 case FILTER:
+                    GWT.log("Bắt được tín hiệu lọc nhân viên theo quyền truy cập");
                     onFilterByRole();
+                    break;
+                case SORT:
+                    GWT.log("Bắt được tin hiệu sắp xếp nhân viên");
+                    onSortByName();
                 default:
                     break;
             }
@@ -132,7 +144,6 @@ public class ListActivity extends AbstractActivity{
                 public void onSuccess(Void result) {
                     Window.alert("Xóa thành công");
                     loadEmployees(); // reload bảng
-                    //eventBus.fireEvent(new EmployeeEvent(Action.DELETE, em)); // optional
                 }
                 @Override
                 public void onFailure(Throwable caught) {
@@ -151,7 +162,6 @@ public class ListActivity extends AbstractActivity{
             loadEmployees();
             return;
         }
-
         //Call RPC 
         clientFactory.getEmployeeService().search(keyword, new AsyncCallback<List<EmployeeDTO>>() {
 
@@ -163,15 +173,44 @@ public class ListActivity extends AbstractActivity{
             @Override
             public void onSuccess(List<EmployeeDTO> result) {
                 GWT.log("Thành công tìm kiếm từ khóa :" + keyword);
-                // Bỏ alert message, để TableView tự xử lý empty state
                 view.showEmployees(result);
             }
             
         });
     }
 
+    private void onBtnRemoveMultipleClicked(List<EmployeeDTO> employees) {
+        if (employees == null || employees.isEmpty()) {
+            return;
+        }
+
+        // Delete each employee
+        for (EmployeeDTO emp : employees) {
+            clientFactory.getEmployeeService().deleteEm(emp.getEmployeeId(), new AsyncCallback<Void>() {
+                @Override
+                public void onSuccess(Void result) {
+                    GWT.log("Xóa thành công nhân viên: " + emp.getFullName());
+                }
+                
+                @Override
+                public void onFailure(Throwable caught) {
+                    GWT.log("Lỗi xóa nhân viên " + emp.getFullName() + ": " + caught.getMessage());
+                }
+            });
+        }
+        
+        com.google.gwt.user.client.Timer timer = new com.google.gwt.user.client.Timer() {
+            @Override
+            public void run() {
+                loadEmployees();
+                Window.alert("Đã xóa " + employees.size() + " nhân viên thành công!");
+            }
+        };
+        timer.schedule(1000); // 1 second delay
+    }
+
     public void onFilterByRole(){
-        String keyword = view.getValueInListBox(); //lấy giá trị đang có trong  list box
+        String keyword = view.getValueInListBox();
 
         GWT.log("Lọc theo :" + keyword);
         
@@ -197,6 +236,27 @@ public class ListActivity extends AbstractActivity{
     }
 
     private void onSortByName(){
-        
+        String keyword = view.getValueInSort();
+
+        GWT.log("Sort theo :" + keyword);
+
+        if (keyword == null) {
+            loadEmployees();
+        }
+
+        //Call rpc
+        clientFactory.getEmployeeService().sortByName(keyword, new AsyncCallback<List<EmployeeDTO>>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                view.showMessage("Có lỗi xảy ra khi sắp xếp :" + keyword + " " + caught.getMessage());
+            }
+
+            @Override
+            public void onSuccess(List<EmployeeDTO> result) {
+                GWT.log("Sắp xếp "+ keyword + " thành công");
+                view.showEmployees(result);
+            }
+        });
     }
 }

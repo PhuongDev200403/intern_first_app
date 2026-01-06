@@ -185,18 +185,20 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
     public List<EmployeeDTO> sortByName(String keyword) throws Exception{
         List<EmployeeDTO> dtos = new ArrayList<>();
         List<Employee> employees = new ArrayList<>();
-        if(keyword.equals("Z - A")){
+        if(keyword.equals("Tăng dần")){
             employees = OfyService.ofy().load().type(Employee.class).order("fullName").list();
-        }else if (keyword.equals("A - Z")) {
+        }else if (keyword.equals("Giảm dần")) {
             employees = OfyService.ofy().load().type(Employee.class).order("-fullName").list();
         }else {
             dtos = getAll();
         }
         
-        for (Employee employee : employees) {
-            //Chuyển từ entity sang dto
-            System.out.println("Bộ lọc khác all nên đi vào đây");
-            dtos.add(entityToDto(employee));
+        if(employees != null || !employees.isEmpty()){
+            //Kiểm tra danh sách có rỗng không đã
+            for (Employee employee : employees) {
+                System.out.println("Bộ lọc khác all nên đi vào đây");
+                dtos.add(entityToDto(employee));
+            }
         }
         return dtos;
     }

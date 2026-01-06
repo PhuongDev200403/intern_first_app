@@ -1,0 +1,17 @@
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:basic="urn:import:com.phuong_coi.english.view">
+    <ui:style>
+
+    </ui:style>
+    <g:HTMLPanel>
+        <basic:Header ui:field="header"></basic:Header>
+        <!-- trong HTML panel này sẽ chứa tất cả các place khác -->
+        <ui:HTMLPanel ui:field="mainContent">
+            <g:Button ui:field="btnAdd" addStyleNames="btn btn-primary">Thêm mới</g:Button>
+            <br></br>
+            <g:Button ui:field="btnView">Danh sách nhân viên</g:Button>
+        </ui:HTMLPanel>
+        <basic:Footer ui:field="footer"></basic:Footer>
+    </g:HTMLPanel>
+</ui:UiBinder>
