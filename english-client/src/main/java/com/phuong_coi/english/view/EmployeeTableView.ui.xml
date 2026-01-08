@@ -104,6 +104,10 @@
             opacity: 0.7;
         }
 
+        .center{
+            margin: 0 auto;
+        }
+
         .emptyTitle {
             font-size: 24px;
             font-weight: 600;
@@ -134,6 +138,8 @@
         <g:HTMLPanel addStyleNames="{style.header}">
             <g:HTMLPanel addStyleNames="{style.searchContainer}">
                 <g:TextBox ui:field="txtSearch" addStyleNames="{style.searchBox}"/>
+                <g:TextBox ui:field="txtSearchEmail" addStyleNames="{style.searchBox}"/>
+                <g:TextBox ui:field="txtSearchPhoneNumber" addStyleNames="{style.searchBox}"/>
                 
                 <g:HTMLPanel addStyleNames="{style.panel}">
                     <g:Label addStyleNames="{style.label}">Lọc theo quyền:</g:Label>
@@ -148,7 +154,7 @@
 
 
             <g:HTMLPanel addStyleNames="{style.actionBar}">
-                <g:Label addStyleNames="{style.label}">Chọn nhân viên để thực hiện hành động hàng loạt</g:Label>
+                <!-- <g:Label addStyleNames="{style.label}">Chọn nhân viên để thực hiện hành động hàng loạt</g:Label> -->
                 <g:Button ui:field="btnDeleteSelected" 
                          text="Xóa đã chọn" 
                          addStyleNames="{style.deleteButton}"/>
@@ -169,7 +175,8 @@
         <g:HTMLPanel addStyleNames="{style.tableContainer}">
             <c:CellTable ui:field="cellTable" 
                         addStyleNames="{style.cellTable}"
-                        pageSize="20"/>
+                        pageSize="5"/>
+            <c:SimplePager ui:field="pager" location="CENTER" addStyleNames="{style.center}"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

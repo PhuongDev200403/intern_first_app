@@ -9,42 +9,47 @@ import com.phuong_coi.english.places.LoginPlace;
 import com.phuong_coi.english.places.RegisterPlace;
 
 public class AppPlaceHistoryMapper implements PlaceHistoryMapper {
+    public static final String DELIMITER = "/";
+    //public static final String COLON = "=";
 
     @Override
     public Place getPlace(String token) {
-        if (token == null || token.trim().isEmpty()) {
+        String[] tokens = token.split(DELIMITER);
+        if (tokens.length ==  0 || token.trim().isEmpty()) {
             return new LoginPlace();
         }
-        
-        switch (token) {
-            case "login":
-                return new LoginPlace();
-            case "register":
-                return new RegisterPlace();
-            case "home":
-                return new HomePlace();
-            case "employees":
-                return new ListPlace();
-            case "add-employee":
-                return new AddPlace();
-            default:
-                return new LoginPlace();
+        Place nextPlace = null;
+        String tokenPlace = tokens[0].trim();
+        if (tokenPlace.indexOf(PlaceToken.ADD) == 0) {
+            nextPlace = new AddPlace();
+        }else if (tokenPlace.indexOf(PlaceToken.HOME) == 0) {
+            nextPlace = new HomePlace();
+        }else if(tokenPlace.indexOf(PlaceToken.LIST) == 0){
+            nextPlace = new ListPlace();
+        }else if(tokenPlace.indexOf(PlaceToken.REGISTER) == 0){
+            nextPlace = new RegisterPlace();
+        }else if(tokenPlace.indexOf(PlaceToken.LOGIN) == 0){
+            nextPlace = new LoginPlace();
+        }else{
+            nextPlace = new LoginPlace();
         }
+        return nextPlace;
     }
 
     @Override
     public String getToken(Place place) {
+        
         if (place instanceof LoginPlace) {
-            return "login";
+            return PlaceToken.LOGIN;
         } else if (place instanceof RegisterPlace) {
-            return "register";
+            return PlaceToken.REGISTER;
         } else if (place instanceof HomePlace) {
-            return "home";
+            return PlaceToken.HOME;
         } else if (place instanceof ListPlace) {
-            return "employees";
+            return PlaceToken.LIST;
         } else if (place instanceof AddPlace) {
-            return "add-employee";
+            return PlaceToken.ADD;
         }
-        return "login";
+        return PlaceToken.LOGIN;
     }
 }

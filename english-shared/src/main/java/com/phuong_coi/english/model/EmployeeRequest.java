@@ -10,6 +10,7 @@ public class EmployeeRequest implements Serializable, IsSerializable{
     private String email;
     private String password;
     private String role;
+    private String fullNameToSearch;
 
     public EmployeeRequest() {
     }
@@ -60,5 +61,8 @@ public class EmployeeRequest implements Serializable, IsSerializable{
 
     public void setRole(String role) {
         this.role = role;
+    }
+    public void setFullNameToSearch(String fullNameToSearch){
+        this.fullNameToSearch = fullNameToSearch;
     }
 }

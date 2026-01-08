@@ -6,6 +6,7 @@ import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -16,24 +17,23 @@ import com.phuong_coi.english.model.EmployeeDTO;
 import com.phuong_coi.english.view.EmployeeDetail;
 import com.phuong_coi.english.view.EmployeeTableView;
 
-public class ListActivity extends AbstractActivity{
+public class ListActivity extends AbstractActivity {
     private ClientFactory clientFactory;
     private Place place;
     private EventBus eventBus;
 
-    // OLD LOGIC - COMMENTED OUT
     // private TableView view;
-    private EmployeeTableView view; // NEW: Using CellTable
+    private EmployeeTableView view;
     private EmployeeDetail detailView;
 
-    public ListActivity(ClientFactory clientFactory){
+    public ListActivity(ClientFactory clientFactory) {
         this.clientFactory = clientFactory;
     }
+
     @Override
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
-        // OLD LOGIC - COMMENTED OUT
         // view = clientFactory.getTableView();
-        view = clientFactory.getEmployeeTableView(); // NEW: Using CellTable
+        view = clientFactory.getEmployeeTableView();
         this.eventBus = eventBus;
         detailView = clientFactory.getEmployeeDetail();
         view.setEventBus(eventBus);
@@ -60,13 +60,20 @@ public class ListActivity extends AbstractActivity{
                     GWT.log("Nhân viên bị xóa và reload bảng");
                     onBtnRemoveClicked(event.getEmployee());
                     break;
-                case DELETE_MULTIPLE: 
+                case DELETE_MULTIPLE:
                     GWT.log("Xóa nhiều nhân viên");
                     onBtnRemoveMultipleClicked((List<EmployeeDTO>) event.getData());
                     break;
                 case SEARCH:
                     GWT.log("Bắt được tín hiệu tìm kiếm nhân viên");
                     onSearch();
+                    break;
+                case SEARCH_EMAIL:
+                    GWT.log("Bắt được tín hiệu tìm kiếm nhân viên theo email");
+                    onSearchEmail();
+                    break;
+                case SEARCH_PHONE_NUMBER:
+                    onSearchPhoneNumber();
                     break;
                 case UPDATE:
                     GWT.log("Bắt được tín hiệu cập nhật nhân viên và reload lại bảng");
@@ -85,9 +92,9 @@ public class ListActivity extends AbstractActivity{
         });
     }
 
-    private void loadEmployees(){
-        //call RPC
-        clientFactory.getEmployeeService().getAll(new AsyncCallback<List<EmployeeDTO>>(){
+    private void loadEmployees() {
+        // call RPC
+        clientFactory.getEmployeeService().getAll(new AsyncCallback<List<EmployeeDTO>>() {
             @Override
             public void onFailure(Throwable caught) {
                 view.showMessage("Lỗi khi lấy danh sách nhân viên :" + caught.getMessage());
@@ -101,8 +108,8 @@ public class ListActivity extends AbstractActivity{
         });
     }
 
-    //Logic cập nhật nhân viên 
-    private void onBtnUpdateClicked(EmployeeDTO em){
+    // Logic cập nhật nhân viên
+    private void onBtnUpdateClicked(EmployeeDTO em) {
 
         if (detailView.getFullName().isEmpty()) {
             Window.alert("tên nhân viên không được để trống nhé");
@@ -115,7 +122,6 @@ public class ListActivity extends AbstractActivity{
 
         em.setFullName(detailView.getFullName());
         em.setRole(detailView.getRole());
-        // call service để lấy ra nhân viên tương ứng và set dữ liệu mới cho nhân viên đấy
         clientFactory.getEmployeeService().updateEm(em, em.getEmployeeId(), new AsyncCallback<EmployeeDTO>() {
 
             @Override
@@ -125,10 +131,12 @@ public class ListActivity extends AbstractActivity{
 
             @Override
             public void onSuccess(EmployeeDTO result) {
-                Window.alert("Cập nhật thông tin nhân viên thành công");
                 // đóng popup
                 detailView.hide();
-                //fire event 
+
+                Window.alert("Cập nhật thông tin nhân viên thành công");
+
+                // fire event
                 eventBus.fireEvent(new EmployeeEvent(Action.UPDATE, result));
                 GWT.log("Cập nhật dữ liệu sau khi đã cập nhật thành công nhân viên");
             }
@@ -136,15 +144,16 @@ public class ListActivity extends AbstractActivity{
     }
 
     // logic xóa nhân viên
-    private void onBtnRemoveClicked(EmployeeDTO em){
-        //call rpc
+    private void onBtnRemoveClicked(EmployeeDTO em) {
+        // call rpc
         if (Window.confirm("Xóa nhân viên " + em.getFullName() + " (ID: " + em.getEmployeeId() + ")?")) {
             clientFactory.getEmployeeService().deleteEm(em.getEmployeeId(), new AsyncCallback<Void>() {
                 @Override
                 public void onSuccess(Void result) {
                     Window.alert("Xóa thành công");
-                    loadEmployees(); // reload bảng
+                    loadEmployees();
                 }
+
                 @Override
                 public void onFailure(Throwable caught) {
                     Window.alert("Lỗi xóa: " + caught.getMessage());
@@ -153,16 +162,16 @@ public class ListActivity extends AbstractActivity{
         }
     }
 
-    //logic cho bộ lọc nhân viên
-    //Tìm kiếm nhân viên theo tên, theo email, theo số điện thoại
-    private void onSearch(){
+    // logic cho bộ lọc nhân viên
+    // Tìm kiếm nhân viên theo tên, theo email, theo số điện thoại
+    private void onSearch() {
         String keyword = view.getSearch();
 
         if (keyword.isEmpty()) {
             loadEmployees();
             return;
         }
-        //Call RPC 
+        // Call RPC
         clientFactory.getEmployeeService().search(keyword, new AsyncCallback<List<EmployeeDTO>>() {
 
             @Override
@@ -173,9 +182,18 @@ public class ListActivity extends AbstractActivity{
             @Override
             public void onSuccess(List<EmployeeDTO> result) {
                 GWT.log("Thành công tìm kiếm từ khóa :" + keyword);
-                view.showEmployees(result);
+                if(keyword.equals(view.getSearch())){
+                    Timer timer = new Timer() {
+
+                        @Override
+                        public void run() {
+                            view.showEmployees(result);
+                        }
+                        
+                    };
+                    timer.schedule(300);
+                }
             }
-            
         });
     }
 
@@ -190,16 +208,18 @@ public class ListActivity extends AbstractActivity{
                 @Override
                 public void onSuccess(Void result) {
                     GWT.log("Xóa thành công nhân viên: " + emp.getFullName());
+                    loadEmployees();
+                    return;
                 }
-                
+
                 @Override
                 public void onFailure(Throwable caught) {
                     GWT.log("Lỗi xóa nhân viên " + emp.getFullName() + ": " + caught.getMessage());
                 }
             });
         }
-        
-        com.google.gwt.user.client.Timer timer = new com.google.gwt.user.client.Timer() {
+
+        Timer timer = new Timer() {
             @Override
             public void run() {
                 loadEmployees();
@@ -209,16 +229,17 @@ public class ListActivity extends AbstractActivity{
         timer.schedule(1000); // 1 second delay
     }
 
-    public void onFilterByRole(){
+    private void onFilterByRole() {
         String keyword = view.getValueInListBox();
 
         GWT.log("Lọc theo :" + keyword);
-        
-        if(keyword == null || keyword.isEmpty()){
+
+        if (keyword == null || keyword.isEmpty()) {
             loadEmployees();
+            return;
         }
 
-        //Call rpc
+        // Call rpc
         clientFactory.getEmployeeService().getListByRole(keyword, new AsyncCallback<List<EmployeeDTO>>() {
 
             @Override
@@ -231,20 +252,21 @@ public class ListActivity extends AbstractActivity{
                 GWT.log("Lọc thành công :" + result);
                 view.showEmployees(result);
             }
-            
+
         });
     }
 
-    private void onSortByName(){
+    private void onSortByName() {
         String keyword = view.getValueInSort();
 
         GWT.log("Sort theo :" + keyword);
 
         if (keyword == null) {
             loadEmployees();
+
         }
 
-        //Call rpc
+        // Call rpc
         clientFactory.getEmployeeService().sortByName(keyword, new AsyncCallback<List<EmployeeDTO>>() {
 
             @Override
@@ -254,8 +276,83 @@ public class ListActivity extends AbstractActivity{
 
             @Override
             public void onSuccess(List<EmployeeDTO> result) {
-                GWT.log("Sắp xếp "+ keyword + " thành công");
-                view.showEmployees(result);
+                GWT.log("Sắp xếp " + keyword + " thành công");
+                Timer timer = new Timer() {
+
+                    @Override
+                    public void run() {
+                        view.showEmployees(result);
+                    }
+                };
+                timer.schedule(300); // khoảng 0,3s mới hiển thị giao dữ liệu
+            }
+        });
+    }
+
+    private void onSearchEmail() {
+        String keyword = view.getSearchEmail();
+
+        if (keyword == null || keyword.isEmpty()) {
+            loadEmployees(); // hiển thị toàn bộ dữ liệu
+            return;
+        }
+        // Call RPC
+        clientFactory.getEmployeeService().searchByEmail(keyword, new AsyncCallback<List<EmployeeDTO>>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                GWT.log("Có lỗi xảy ra trong quá trình tìm kiếm theo email :" + caught.getMessage());
+                view.showMessage(caught.getMessage());
+            }
+
+            @Override
+            public void onSuccess(List<EmployeeDTO> result) {
+                GWT.log("Thành công tìm kiếm nhân viên theo email của nhân viên");
+                if (keyword.equals(view.getSearchEmail())) {
+                    Timer timer = new Timer() {
+
+                        @Override
+                        public void run() {
+                            view.showEmployees(result);
+                        }
+
+                    };
+                    timer.schedule(300);
+                }
+            }
+
+        });
+    }
+
+    private void onSearchPhoneNumber() {
+        String keyword = view.getSearchPhoneNumber();
+
+        if (keyword == null || keyword.isEmpty()) {
+            loadEmployees();
+            return;
+        }
+        // Call RPC
+        clientFactory.getEmployeeService().searchByPhoneNumber(keyword, new AsyncCallback<List<EmployeeDTO>>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                GWT.log("Có lỗi xảy ra trong quá trình tìm kiếm nhân viên theo số điện thoại");
+                view.showMessage("Lỗi :" + caught.getMessage());
+            }
+
+            @Override
+            public void onSuccess(List<EmployeeDTO> result) {
+                GWT.log("Thành công tìm kiếm nhân viên theo số điện thoại");
+                if (keyword.equals(view.getSearchPhoneNumber())) {
+                    Timer time = new Timer() {
+
+                        @Override
+                        public void run() {
+                            view.showEmployees(result);
+                        }
+                    };
+                    time.schedule(300);
+                }
             }
         });
     }

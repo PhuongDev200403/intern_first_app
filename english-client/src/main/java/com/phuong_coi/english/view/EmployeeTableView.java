@@ -14,6 +14,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
@@ -36,28 +37,28 @@ public class EmployeeTableView extends Composite {
 
     private static EmployeeTableViewUiBinder uiBinder = GWT.create(EmployeeTableViewUiBinder.class);
 
-    @UiField
-    CellTable<EmployeeDTO> cellTable;
-    @UiField
-    TextBox txtSearch;
-    @UiField
-    ListBox filterByRole;
-    @UiField
-    ListBox sortByName;
-    @UiField
-    Button btnDeleteSelected;
-    @UiField
-    HTMLPanel emptyMessagePanel;
+    @UiField CellTable<EmployeeDTO> cellTable;
+    @UiField TextBox txtSearch , txtSearchEmail, txtSearchPhoneNumber;
+    @UiField ListBox filterByRole;
+    @UiField ListBox sortByName;
+    @UiField Button btnDeleteSelected;
+    @UiField HTMLPanel emptyMessagePanel;
+    @UiField SimplePager pager;
 
     private EventBus eventBus;
     private ListDataProvider<EmployeeDTO> dataProvider;
     private MultiSelectionModel<EmployeeDTO> selectionModel;
+    
 
     public EmployeeTableView() {
         initWidget(uiBinder.createAndBindUi(this));
 
         dataProvider = new ListDataProvider<>();
         dataProvider.addDataDisplay(cellTable);
+        
+        pager.setPageStart(0);
+        pager.setPageSize(5);
+        pager.setDisplay(cellTable);
 
         selectionModel = new MultiSelectionModel<>();
         cellTable.setSelectionModel(selectionModel, DefaultSelectionEventManager.<EmployeeDTO>createCheckboxManager());
@@ -76,6 +77,9 @@ public class EmployeeTableView extends Composite {
     }
 
     private void initColumns() {
+        cellTable.setWidth("100%");
+        cellTable.setAutoHeaderRefreshDisabled(true);
+        cellTable.setAutoFooterRefreshDisabled(true);
         // Cột checkbox
         Column<EmployeeDTO, Boolean> checkboxColumn = new Column<EmployeeDTO, Boolean>(new CheckboxCell(true, false)) {
             @Override
@@ -84,7 +88,7 @@ public class EmployeeTableView extends Composite {
             }
         };
         cellTable.addColumn(checkboxColumn, "");
-        cellTable.setColumnWidth(checkboxColumn, "8%");
+        cellTable.setColumnWidth(checkboxColumn, "12.5%");
 
         // Cột mã nhân viên
         TextColumn<EmployeeDTO> idColumn = new TextColumn<EmployeeDTO>() {
@@ -94,7 +98,7 @@ public class EmployeeTableView extends Composite {
             }
         };
         cellTable.addColumn(idColumn, "ID");
-        cellTable.setColumnWidth(idColumn, "16%px");
+        cellTable.setColumnWidth(idColumn, "6%");
 
         // Cột fullName
         TextColumn<EmployeeDTO> nameColumn = new TextColumn<EmployeeDTO>() {
@@ -104,9 +108,9 @@ public class EmployeeTableView extends Composite {
             }
         };
         cellTable.addColumn(nameColumn, "Họ tên");
-        cellTable.setColumnWidth(nameColumn, "20%px");
+        cellTable.setColumnWidth(nameColumn, "19%");
 
-        // Email column
+        // Côt email
         TextColumn<EmployeeDTO> emailColumn = new TextColumn<EmployeeDTO>() {
             @Override
             public String getValue(EmployeeDTO object) {
@@ -114,9 +118,9 @@ public class EmployeeTableView extends Composite {
             }
         };
         cellTable.addColumn(emailColumn, "Email");
-        cellTable.setColumnWidth(emailColumn, "20%");
+        cellTable.setColumnWidth(emailColumn, "12.5%");
 
-        // Phone column
+        //Cột số điện thoại
         TextColumn<EmployeeDTO> phoneColumn = new TextColumn<EmployeeDTO>() {
             @Override
             public String getValue(EmployeeDTO object) {
@@ -124,7 +128,7 @@ public class EmployeeTableView extends Composite {
             }
         };
         cellTable.addColumn(phoneColumn, "Số điện thoại");
-        cellTable.setColumnWidth(phoneColumn, "18%px");
+        cellTable.setColumnWidth(phoneColumn, "12.5%");
 
         // Role column
         TextColumn<EmployeeDTO> roleColumn = new TextColumn<EmployeeDTO>() {
@@ -134,7 +138,7 @@ public class EmployeeTableView extends Composite {
             }
         };
         cellTable.addColumn(roleColumn, "Quyền truy cập");
-        cellTable.setColumnWidth(roleColumn, "20%px");
+        cellTable.setColumnWidth(roleColumn, "12.5%");
 
         // Update button column
         Column<EmployeeDTO, String> updateColumn = new Column<EmployeeDTO, String>(new ButtonCell()) {
@@ -150,7 +154,7 @@ public class EmployeeTableView extends Composite {
             }
         });
         cellTable.addColumn(updateColumn, "Cập nhật");
-        cellTable.setColumnWidth(updateColumn, "10%px");
+        cellTable.setColumnWidth(updateColumn, "12.5%");
 
         // Delete button column
         Column<EmployeeDTO, String> deleteColumn = new Column<EmployeeDTO, String>(new ButtonCell()) {
@@ -166,16 +170,46 @@ public class EmployeeTableView extends Composite {
             }
         });
         cellTable.addColumn(deleteColumn, "Xóa");
-        cellTable.setColumnWidth(deleteColumn, "8%px");
+        cellTable.setColumnWidth(deleteColumn, "12.5%");
     }
 
     private void setupUI() {
-        txtSearch.getElement().setAttribute("placeholder", "Tìm kiếm theo tên, email, số điện thoại...");
+        txtSearch.getElement().setAttribute("placeholder", "Tìm kiếm theo tên nhân viên...");
+        txtSearchEmail.getElement().setAttribute("placeholder", "Tìm kiếm theo email của nhân viên...");
+        txtSearchPhoneNumber.getElement().setAttribute("placeholder", "Tìm kiếm theo số điện thoại nhân viên...");
+
         txtSearch.addKeyDownHandler(event -> {
             if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
                 performSearch();
                 event.preventDefault();
             }
+        });
+
+        txtSearch.addKeyUpHandler(event -> {
+            performSearch();
+        });
+
+        txtSearchEmail.addKeyDownHandler(event -> {
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                performSearchEmail();
+                event.preventDefault();
+            }
+        });
+
+        //tìm kiếm realtime
+        txtSearchEmail.addKeyUpHandler(event -> {
+            performSearchEmail();
+        });
+
+        txtSearchPhoneNumber.addKeyDownHandler(event -> {
+            if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                performSearchPhoneNumber();
+                event.preventDefault();
+            }
+        });
+
+        txtSearchPhoneNumber.addKeyUpHandler(event -> {
+            performSearchPhoneNumber();
         });
 
         String[] roles = { "All", "ADMIN", "USER" };
@@ -217,6 +251,11 @@ public class EmployeeTableView extends Composite {
             updateDeleteButtonVisibility();
         }
 
+    }
+
+    private void performSearchPhoneNumber(){
+        String keyword = txtSearchPhoneNumber.getText().trim();
+        fireEvent(new EmployeeEvent(Action.SEARCH_PHONE_NUMBER, keyword));
     }
 
     private void updateDeleteButtonVisibility() {
@@ -264,6 +303,11 @@ public class EmployeeTableView extends Composite {
         fireEvent(new EmployeeEvent(EmployeeEvent.Action.FILTER, keyword));
     }
 
+    private void performSearchEmail(){
+        String keyword = txtSearchEmail.getText().trim();
+        fireEvent(new EmployeeEvent(Action.SEARCH_EMAIL, keyword));
+    }
+
     private void fireEvent(EmployeeEvent event) {
         if (eventBus != null) {
             eventBus.fireEvent(event);
@@ -293,4 +337,21 @@ public class EmployeeTableView extends Composite {
     public String getValueInSort() {
         return sortByName.getSelectedItemText();
     }
+
+    public String getSearchEmail(){
+        return txtSearchEmail.getText().trim();
+    }
+
+    public String getSearchPhoneNumber(){
+        return txtSearchPhoneNumber.getText().trim();
+    }
+
+    public void setSearchEmail(String keyword){
+        txtSearchEmail.setText(keyword != null ? keyword : "");
+    }
+
+    public void setSearchPhoneNumber(String keyword){
+        txtSearchPhoneNumber.setText(keyword != null ? keyword : "");
+    }
+
 }

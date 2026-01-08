@@ -10,15 +10,14 @@ import com.phuong_coi.english.view.Form;
 import com.phuong_coi.english.view.FormLoginView;
 import com.phuong_coi.english.view.FormRegisterView;
 import com.phuong_coi.english.view.Home;
-import com.phuong_coi.english.view.TableView;
 
 public interface ClientFactory {
     public PlaceController getPlaceController();
     public EventBus getEventBus();
+    
     public FormLoginView getFormLogin();
     public FormRegisterView getFormRegister();
     public Form getForm();
-    public TableView getTableView();
     public EmployeeTableView getEmployeeTableView();
     public EmployeeDetail getEmployeeDetail();
     public Home getHome();

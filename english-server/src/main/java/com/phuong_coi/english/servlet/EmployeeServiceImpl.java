@@ -1,7 +1,9 @@
 package com.phuong_coi.english.servlet;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.google.gwt.user.server.rpc.jakarta.RemoteServiceServlet;
 import com.phuong_coi.english.entity.Employee;
@@ -28,22 +30,25 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
 
         // đổi từ request sang entity
         Employee em = new Employee();
-        em.setEmail(employee.getEmail());
-        em.setFullName(employee.getFullName());
-        em.setPhoneNumber(employee.getPhoneNumber());
-        em.setPassword(employee.getPassword());
-        em.setRole(employee.getRole());
+        em = requestToEntity(employee);
 
+    
+        //Tách tên thành từng ký tự
+        String[] words = em.getFullName().toLowerCase().trim().split(" "); // Tách theo khoảng trắng
+        List<String> searchWords = new ArrayList<>();
+        for (String string : words) {
+            searchWords.add(removeVietnameseAccents(string));
+        }
+
+        em.setName(removeVietnameseAccents(words[words.length - 1].toLowerCase().trim()));
+        System.out.println(words[words.length - 1]);
+        em.setSearchWord(searchWords);
         // Lưu vào db
         OfyService.ofy().save().entity(em).now();
 
         // Đổi từ entity sang dto
         EmployeeDTO dto = new EmployeeDTO();
-        dto.setEmployeeId(em.getId());
-        dto.setEmail(em.getEmail());
-        dto.setFullName(em.getFullName());
-        dto.setPhoneNumber(em.getPhoneNumber());
-        dto.setRole(em.getRole());
+        dto = entityToDto(em);
 
         return dto;
     }
@@ -57,7 +62,6 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
             throw new Exception("ID nhân viên không hợp lệ");
         }
 
-        // Bước 1: Tìm entity cũ theo ID
         Employee existingEmployee = OfyService.ofy().load().type(Employee.class)
                 .id(employeeId).now();
 
@@ -65,11 +69,18 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
             throw new Exception("Không tìm thấy nhân viên với ID: " + employeeId);
         }
 
-        // Bước 2: Cập nhật các field từ DTO mới (tránh cập nhật ID và email nếu không
-        // muốn)
-        // Bạn có thể cho phép hoặc không cho phép thay đổi email tùy yêu cầu
         if (employee.getFullName() != null && !employee.getFullName().trim().isEmpty()) {
             existingEmployee.setFullName(employee.getFullName().trim());
+            String[] words = employee.getFullName().toLowerCase().trim().split(" "); // Tách theo khoảng trắng
+            List<String> searchWords = new ArrayList<>();
+            for (String string : words) {
+                searchWords.add(removeVietnameseAccents(string));
+            }
+
+            existingEmployee.setSearchWord(searchWords);
+
+            existingEmployee.setName(removeVietnameseAccents(words[words.length - 1].toLowerCase().trim()));
+            System.out.println(words[words.length - 1]);
         }
 
         if (employee.getPhoneNumber() != null) {
@@ -80,16 +91,10 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
             existingEmployee.setRole(employee.getRole().trim());
         }
 
-        // Bước 3: Lưu lại entity đã cập nhật
         OfyService.ofy().save().entity(existingEmployee).now();
 
-        // Bước 4: Trả về DTO mới nhất (có thể load lại để chắc chắn)
         EmployeeDTO updatedDTO = new EmployeeDTO();
-        updatedDTO.setEmployeeId(existingEmployee.getId());
-        updatedDTO.setFullName(existingEmployee.getFullName());
-        updatedDTO.setEmail(existingEmployee.getEmail());
-        updatedDTO.setPhoneNumber(existingEmployee.getPhoneNumber());
-        updatedDTO.setRole(existingEmployee.getRole());
+        updatedDTO = entityToDto(existingEmployee);
 
         return updatedDTO;
     }
@@ -113,43 +118,21 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
         List<EmployeeDTO> dtos = new ArrayList<>();
         for (Employee employee : employees) {
             EmployeeDTO dto = new EmployeeDTO();
-            dto.setEmployeeId(employee.getId());
-            dto.setEmail(employee.getEmail());
-            dto.setFullName(employee.getFullName());
-            dto.setPhoneNumber(employee.getPhoneNumber());
-            dto.setRole(employee.getRole());
+            dto = entityToDto(employee);
             dtos.add(dto);
         }
         return dtos;
     }
 
     @Override
-    public EmployeeDTO getByEmployeeId(Long employeeId) throws Exception {
-        // tìm xem có tồn tại nhân viên này hay không
-        return null;
-    }
-
-    @Override
     public List<EmployeeDTO> search(String keyword) throws Exception {
         String word = keyword.trim().toLowerCase();
-        // Toàn bộ danh sách nhân viên
-        List<Employee> employees = OfyService.ofy().load().type(Employee.class).list();
+        List<Employee> employees = OfyService.ofy().load().type(Employee.class)
+                .filter("searchWord =", word)
+                .list();
         List<EmployeeDTO> dtos = new ArrayList<>();
-        for (Employee em : employees) {
-            boolean isContaint = false;
-
-            if (em.getEmail().toLowerCase().contains(word)) {
-                isContaint = true;
-            }
-            if (em.getFullName().toLowerCase().contains(word)) {
-                isContaint = true;
-            }
-            if (em.getPhoneNumber().toLowerCase().contains(word)) {
-                isContaint = true;
-            }
-            if (isContaint) {
-                dtos.add(entityToDto(em));
-            }
+        for (Employee employee : employees) {
+            dtos.add(entityToDto(employee));
         }
         return dtos;
     }
@@ -170,6 +153,17 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
         return dtos;
     }
 
+    // Chuyển từ request sang entity
+    private Employee requestToEntity(EmployeeRequest request) {
+        Employee em = new Employee();
+        em.setEmail(request.getEmail());
+        em.setFullName(request.getFullName());
+        em.setPassword(request.getPassword());
+        em.setPhoneNumber(request.getPhoneNumber());
+        em.setRole(request.getRole());
+        return em;
+    }
+
     // Chuyển từ entity sang dto
     private EmployeeDTO entityToDto(Employee em) {
         EmployeeDTO dto = new EmployeeDTO();
@@ -181,24 +175,64 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
         return dto;
     }
 
+    private String removeVietnameseAccents(String input) {
+        if (input == null) return null;
+    
+        // Chuẩn hóa về dạng có dấu tách riêng (NFD)
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+    
+        // Xóa toàn bộ ký tự dấu (Mark)
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        String noAccent = pattern.matcher(normalized).replaceAll("");
+    
+        // Xử lý riêng Đ/đ
+        noAccent = noAccent.replace('Đ', 'D').replace('đ', 'd');
+    
+        return noAccent;
+    }
+
     @Override
-    public List<EmployeeDTO> sortByName(String keyword) throws Exception{
+    public List<EmployeeDTO> sortByName(String keyword) throws Exception {
         List<EmployeeDTO> dtos = new ArrayList<>();
         List<Employee> employees = new ArrayList<>();
-        if(keyword.equals("Tăng dần")){
-            employees = OfyService.ofy().load().type(Employee.class).order("fullName").list();
-        }else if (keyword.equals("Giảm dần")) {
-            employees = OfyService.ofy().load().type(Employee.class).order("-fullName").list();
-        }else {
+        if (keyword.equals("Tăng dần")) {
+            employees = OfyService.ofy().load().type(Employee.class).order("name").list();
+        } else if (keyword.equals("Giảm dần")) {
+            employees = OfyService.ofy().load().type(Employee.class).order("-name").list();
+        } else {
             dtos = getAll();
         }
-        
-        if(employees != null || !employees.isEmpty()){
-            //Kiểm tra danh sách có rỗng không đã
+        if (employees != null || !employees.isEmpty()) {
+            // Kiểm tra danh sách có rỗng không đã
             for (Employee employee : employees) {
-                System.out.println("Bộ lọc khác all nên đi vào đây");
                 dtos.add(entityToDto(employee));
             }
+        }
+        return dtos;
+    }
+
+    @Override
+    public List<EmployeeDTO> searchByEmail(String email) throws Exception {
+        List<Employee> employees = OfyService.ofy().load().type(Employee.class)
+                .filter("email >=", email.toLowerCase().trim())
+                .filter("email <", email.toLowerCase().trim() + "\uf8ff")
+                .list();
+        List<EmployeeDTO> dtos = new ArrayList<>();
+        for (Employee employee : employees) {
+            dtos.add(entityToDto(employee));
+        }
+        return dtos;
+    }
+
+    @Override
+    public List<EmployeeDTO> searchByPhoneNumber(String phoneNumber) throws Exception {
+        List<Employee> employees = OfyService.ofy().load().type(Employee.class)
+                .filter("phoneNumber >=", phoneNumber.toLowerCase().trim())
+                .filter("phoneNumber <", phoneNumber.toLowerCase().trim() + "\uf8ff")
+                .list();
+        List<EmployeeDTO> dtos = new ArrayList<>();
+        for (Employee employee : employees) {
+            dtos.add(entityToDto(employee));
         }
         return dtos;
     }

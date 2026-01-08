@@ -1,5 +1,7 @@
 package com.phuong_coi.english.entity;
 
+import java.util.List;
+
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -18,6 +20,10 @@ public class Employee {
     private String password;
     @Index
     private String role;
+    @Index
+    private List<String> searchWord;
+    @Index
+    private String name;
 
     public Employee(){}
 
@@ -62,7 +68,7 @@ public class Employee {
     public void setPhoneNumber(String phoneNumber){
         this.phoneNumber = phoneNumber;
     }
-    // Getter cho password (chỉ trả về chuỗi hash)
+    //Getter cho password (chỉ trả về chuỗi hash)
     public String getPassword() {
         return password;
     }
@@ -74,4 +80,13 @@ public class Employee {
     public void setRole(String role){
         this.role = role;
     }
+
+    public void setSearchWord(List<String> searchWord){
+        this.searchWord = searchWord;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
 }

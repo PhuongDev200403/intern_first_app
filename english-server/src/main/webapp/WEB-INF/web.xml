@@ -22,16 +22,6 @@
 	<!-- Servlets -->
 
   <servlet>
-    <servlet-name>usersServlet</servlet-name>
-    <servlet-class>com.phuong_coi.english.servlet.UserServiceImpl</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>usersServlet</servlet-name>
-    <url-pattern>/users</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>employeeServlet</servlet-name>
     <servlet-class>com.phuong_coi.english.servlet.EmployeeServiceImpl</servlet-class>
   </servlet>

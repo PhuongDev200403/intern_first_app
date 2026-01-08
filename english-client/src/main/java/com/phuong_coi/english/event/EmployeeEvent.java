@@ -11,7 +11,7 @@ public class EmployeeEvent extends GwtEvent<EmployeeEvent.Handler>{
     }
 
     public enum Action{
-        CREATE, UPDATE, DELETE, DELETE_MULTIPLE, SEARCH, CLICK, FILTER, SORT
+        CREATE, UPDATE, DELETE, DELETE_MULTIPLE, SEARCH, CLICK, FILTER, SORT, SEARCH_EMAIL, SEARCH_PHONE_NUMBER
     }
 
     public static Type<Handler> TYPE = new Type<>();

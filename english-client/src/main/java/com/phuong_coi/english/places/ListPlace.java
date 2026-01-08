@@ -7,16 +7,20 @@ import com.phuong_coi.english.PlaceToken;
 public class ListPlace extends Place{
 
     public ListPlace(){}
+
+    public String getToken(){
+        return PlaceToken.LIST;
+    }
     public static class Tokenizer implements PlaceTokenizer<ListPlace>{
 
         @Override
         public ListPlace getPlace(String token) {
             return new ListPlace();
         }
-        
+
         @Override
         public String getToken(ListPlace place) {
-            return PlaceToken.LIST;
+            return place.getToken();
         }
     }
 }

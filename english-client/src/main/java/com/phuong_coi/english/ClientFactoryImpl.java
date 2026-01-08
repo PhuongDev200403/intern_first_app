@@ -14,7 +14,7 @@ import com.phuong_coi.english.view.Form;
 import com.phuong_coi.english.view.FormLoginView;
 import com.phuong_coi.english.view.FormRegisterView;
 import com.phuong_coi.english.view.Home;
-import com.phuong_coi.english.view.TableView;
+//import com.phuong_coi.english.view.TableView;
 
 public class ClientFactoryImpl implements ClientFactory{
     private PlaceController placeController;
@@ -22,7 +22,7 @@ public class ClientFactoryImpl implements ClientFactory{
     private FormLoginView formLogin;
     private FormRegisterView formRegister;
     private Form form;
-    private TableView tableView;
+    //private TableView tableView;
     private EmployeeTableView employeeTableView;
     private EmployeeDetail employeeDetail;
     private Home home;
@@ -75,11 +75,11 @@ public class ClientFactoryImpl implements ClientFactory{
         return form;
     }
 
-    @Override
-    public TableView getTableView() {
-        tableView = new TableView();
-        return tableView;
-    }
+    // @Override
+    // public TableView getTableView() {
+    //     tableView = new TableView();
+    //     return tableView;
+    // }
 
     @Override
     public EmployeeTableView getEmployeeTableView() {

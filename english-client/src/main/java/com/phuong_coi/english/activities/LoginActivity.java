@@ -57,7 +57,6 @@ public class LoginActivity extends AbstractActivity{
             @Override
             public void onSuccess(EmployeeDTO result) {
                 GWT.log("Phát tín hiệu nút đăng nhập được click thành công tại LoginActivities");
-                //eventBus.fireEvent(new AuthActionEvent(Action.Login, result));
                 // nếu đúng email và password đúng thì đều vào trang homepage
                 GWT.log("Người dùng :" + result.getFullName() + " Đang đăng nhập");
                 clientFactory.getPlaceController().goTo(new HomePlace());
@@ -72,6 +71,7 @@ public class LoginActivity extends AbstractActivity{
 
     //Sự kiện click nút đăng ký
     private void onRegister(){
+        GWT.log("Chuyển sang màn hình đăng ký");
         clientFactory.getPlaceController().goTo(new RegisterPlace());
     }
 }

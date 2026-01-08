@@ -56,7 +56,7 @@
                     </tr>
                     <tr class="{style.row-spacing}">
                         <td class="{style.label}">Quyền truy cập:</td>
-                        <td><g:ListBox ui:field="lbRole" width="100%" addStyleNames="form-control"/></td>
+                        <td><g:ListBox ui:field="lbRole" width="100%" addStyleNames="form-select"/></td>
                     </tr>
                     <tr class="{style.row-spacing}">
                         <td>

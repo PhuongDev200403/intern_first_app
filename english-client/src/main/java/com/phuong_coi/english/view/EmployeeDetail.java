@@ -47,9 +47,6 @@ public class EmployeeDetail extends Composite{
             hide();
         });
 
-        //Lắng nghe sự kiện eventBus để hiển thị popup
-
-
     }
 
     //các phương thức có trong popup panel

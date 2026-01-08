@@ -9,6 +9,10 @@ public class AddPlace extends Place{
     public AddPlace(){
     }
 
+    public String getToken(){
+        return PlaceToken.ADD;
+    }
+
     public static class Tokenizer implements PlaceTokenizer<AddPlace>{
 
         @Override
@@ -18,7 +22,7 @@ public class AddPlace extends Place{
 
         @Override
         public String getToken(AddPlace place) {
-            return PlaceToken.ADD;
+            return place.getToken();
         }
 
     }

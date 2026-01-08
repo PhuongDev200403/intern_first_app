@@ -18,7 +18,6 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
         if (email == null || email.trim().isEmpty() || password == null || password.isEmpty()) {
             throw new LoginException("Email và mật khẩu không được để trống");
         }
-
         // Tìm employee theo email
         Employee employee = OfyService.ofy().load().type(Employee.class)
                 .filter("email", email.trim())
@@ -48,7 +47,6 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 
     @Override
     public EmployeeDTO register(EmployeeRequest employee) throws LoginException {
-        //validate dữ liệu trong form trước
 
         // kiểm tra email đã tồn tại trong database chưa trước đã
         Employee em = OfyService.ofy().load().type(Employee.class)
@@ -56,7 +54,6 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
         if(em != null){
             throw new LoginException("Email đã tồn tại yêu cầu nhập email khác");
         }
-
         // đổi từ request sang entity
         Employee newEm = new Employee();
         newEm.setEmail(employee.getEmail());
