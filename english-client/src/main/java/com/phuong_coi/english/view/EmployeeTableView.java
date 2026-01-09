@@ -48,7 +48,6 @@ public class EmployeeTableView extends Composite {
     private EventBus eventBus;
     private ListDataProvider<EmployeeDTO> dataProvider;
     private MultiSelectionModel<EmployeeDTO> selectionModel;
-    
 
     public EmployeeTableView() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -196,20 +195,11 @@ public class EmployeeTableView extends Composite {
             }
         });
 
-        //tìm kiếm realtime
-        txtSearchEmail.addKeyUpHandler(event -> {
-            performSearchEmail();
-        });
-
         txtSearchPhoneNumber.addKeyDownHandler(event -> {
             if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
                 performSearchPhoneNumber();
                 event.preventDefault();
             }
-        });
-
-        txtSearchPhoneNumber.addKeyUpHandler(event -> {
-            performSearchPhoneNumber();
         });
 
         String[] roles = { "All", "ADMIN", "USER" };

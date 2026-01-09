@@ -1,5 +1,6 @@
 package com.phuong_coi.english.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.activity.shared.AbstractActivity;
@@ -22,9 +23,10 @@ public class ListActivity extends AbstractActivity {
     private Place place;
     private EventBus eventBus;
 
-    // private TableView view;
     private EmployeeTableView view;
     private EmployeeDetail detailView;
+
+    private List<EmployeeDTO> cachedEmployees = new ArrayList<>(); 
 
     public ListActivity(ClientFactory clientFactory) {
         this.clientFactory = clientFactory;
@@ -104,6 +106,7 @@ public class ListActivity extends AbstractActivity {
             public void onSuccess(List<EmployeeDTO> result) {
                 GWT.log("Thành công lấy danh sách người dùng :" + result);
                 view.showEmployees(result);
+                cachedEmployees = result;
             }
         });
     }
@@ -160,41 +163,6 @@ public class ListActivity extends AbstractActivity {
                 }
             });
         }
-    }
-
-    // logic cho bộ lọc nhân viên
-    // Tìm kiếm nhân viên theo tên, theo email, theo số điện thoại
-    private void onSearch() {
-        String keyword = view.getSearch();
-
-        if (keyword.isEmpty()) {
-            loadEmployees();
-            return;
-        }
-        // Call RPC
-        clientFactory.getEmployeeService().search(keyword, new AsyncCallback<List<EmployeeDTO>>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                view.showMessage("Có lỗi xảy ra trong quá trình tìm kiếm");
-            }
-
-            @Override
-            public void onSuccess(List<EmployeeDTO> result) {
-                GWT.log("Thành công tìm kiếm từ khóa :" + keyword);
-                if(keyword.equals(view.getSearch())){
-                    Timer timer = new Timer() {
-
-                        @Override
-                        public void run() {
-                            view.showEmployees(result);
-                        }
-                        
-                    };
-                    timer.schedule(300);
-                }
-            }
-        });
     }
 
     private void onBtnRemoveMultipleClicked(List<EmployeeDTO> employees) {
@@ -296,6 +264,7 @@ public class ListActivity extends AbstractActivity {
             loadEmployees(); // hiển thị toàn bộ dữ liệu
             return;
         }
+        GWT.log("đang tìm kiếm từ khóa :" + keyword);
         // Call RPC
         clientFactory.getEmployeeService().searchByEmail(keyword, new AsyncCallback<List<EmployeeDTO>>() {
 
@@ -331,6 +300,9 @@ public class ListActivity extends AbstractActivity {
             loadEmployees();
             return;
         }
+
+        GWT.log("đang tìm kiếm theo từ khóa :" + keyword);
+
         // Call RPC
         clientFactory.getEmployeeService().searchByPhoneNumber(keyword, new AsyncCallback<List<EmployeeDTO>>() {
 
@@ -355,5 +327,22 @@ public class ListActivity extends AbstractActivity {
                 }
             }
         });
+    }
+
+    private void onSearch(){
+        String keyword = view.getSearch();
+
+        if(keyword == null){
+            view.showEmployees(cachedEmployees); // keyword = null thì sẽ load toàn bộ dữ liệu
+        }
+
+        GWT.log("Đang tìm kiếm theo từ khóa :" + keyword);
+        List<EmployeeDTO> dtos = new ArrayList<>();
+        for (EmployeeDTO employeeDTO : cachedEmployees) {
+            if (employeeDTO.getFullName().contains(keyword)) {
+                dtos.add(employeeDTO);
+            }
+        }
+        view.showEmployees(dtos);
     }
 }

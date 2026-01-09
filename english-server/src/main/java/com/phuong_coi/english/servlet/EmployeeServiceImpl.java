@@ -7,32 +7,40 @@ import java.util.regex.Pattern;
 
 import com.google.gwt.user.server.rpc.jakarta.RemoteServiceServlet;
 import com.phuong_coi.english.entity.Employee;
+import com.phuong_coi.english.exception.EmployeeException;
 import com.phuong_coi.english.model.EmployeeDTO;
 import com.phuong_coi.english.model.EmployeeRequest;
 import com.phuong_coi.english.service.EmployeeService;
 import com.phuong_coi.english.util.OfyService;
+import com.phuong_coi.english.validation.EmValidate;
 
 public class EmployeeServiceImpl extends RemoteServiceServlet implements EmployeeService {
 
     @Override
-    public EmployeeDTO createEm(EmployeeRequest employee) throws Exception {
+    public EmployeeDTO createEm(EmployeeRequest employee) throws EmployeeException {
         if (employee.getEmail().isEmpty()) {
-            throw new Exception("Email không hợp lệ");
+            throw new EmployeeException("Email không hợp lệ");
         }
 
         if (employee.getFullName().isEmpty()) {
-            throw new Exception("FullName không hợp lệ");
+            throw new EmployeeException("FullName không hợp lệ");
         }
 
         if (employee.getPhoneNumber().isEmpty()) {
-            throw new Exception("Số điện thoại không hợp lệ");
+            throw new EmployeeException("Số điện thoại không hợp lệ");
         }
 
+        Employee existedPhone = OfyService.ofy().load().type(Employee.class).filter("phoneNumber", employee.getPhoneNumber()).first().now();
+
+        System.out.println("existed phone number: " + existedPhone);
+
+        if (EmValidate.existedPhoneNumber(employee.getPhoneNumber(), existedPhone.getPhoneNumber())) {
+            throw new EmployeeException("Số điện thoại đã tồn tại");
+        }
         // đổi từ request sang entity
         Employee em = new Employee();
         em = requestToEntity(employee);
 
-    
         //Tách tên thành từng ký tự
         String[] words = em.getFullName().toLowerCase().trim().split(" "); // Tách theo khoảng trắng
         List<String> searchWords = new ArrayList<>();
@@ -54,19 +62,19 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
     }
 
     @Override
-    public EmployeeDTO updateEm(EmployeeDTO employee, Long employeeId) throws Exception {
+    public EmployeeDTO updateEm(EmployeeDTO employee, Long employeeId) throws EmployeeException {
         if (employee == null) {
-            throw new Exception("Dữ liệu nhân viên cập nhật không hợp lệ");
+            throw new EmployeeException("Dữ liệu nhân viên cập nhật không hợp lệ");
         }
         if (employeeId == null || employeeId <= 0) {
-            throw new Exception("ID nhân viên không hợp lệ");
+            throw new EmployeeException("ID nhân viên không hợp lệ");
         }
 
         Employee existingEmployee = OfyService.ofy().load().type(Employee.class)
                 .id(employeeId).now();
 
         if (existingEmployee == null) {
-            throw new Exception("Không tìm thấy nhân viên với ID: " + employeeId);
+            throw new EmployeeException("Không tìm thấy nhân viên với ID: " + employeeId);
         }
 
         if (employee.getFullName() != null && !employee.getFullName().trim().isEmpty()) {
@@ -76,7 +84,6 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
             for (String string : words) {
                 searchWords.add(removeVietnameseAccents(string));
             }
-
             existingEmployee.setSearchWord(searchWords);
 
             existingEmployee.setName(removeVietnameseAccents(words[words.length - 1].toLowerCase().trim()));
@@ -100,19 +107,19 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
     }
 
     @Override
-    public void deleteEm(Long employeeId) throws Exception {
-        // tìm kiếm xem nhân viên muốn cập nhật có đang tồn tại hay không
+    public void deleteEm(Long employeeId) throws EmployeeException {
+        //tìm kiếm xem nhân viên muốn cập nhật có đang tồn tại hay không
         Employee employee = OfyService.ofy().load().type(Employee.class)
                 .id(employeeId).now();
         if (employee == null) {
-            throw new Exception("Nhân viên đang cần cập nhật không tồn tại");
+            throw new EmployeeException("Nhân viên đang cần cập nhật không tồn tại");
         }
         // Xóa nhân viên được chọn khỏi danh sách
         OfyService.ofy().delete().entity(employee).now();
     }
 
     @Override
-    public List<EmployeeDTO> getAll() throws Exception {
+    public List<EmployeeDTO> getAll() throws EmployeeException {
         List<Employee> employees = OfyService.ofy().load().type(Employee.class).list();
         System.out.println("list employee :" + employees);
         List<EmployeeDTO> dtos = new ArrayList<>();
@@ -125,20 +132,7 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
     }
 
     @Override
-    public List<EmployeeDTO> search(String keyword) throws Exception {
-        String word = keyword.trim().toLowerCase();
-        List<Employee> employees = OfyService.ofy().load().type(Employee.class)
-                .filter("searchWord =", word)
-                .list();
-        List<EmployeeDTO> dtos = new ArrayList<>();
-        for (Employee employee : employees) {
-            dtos.add(entityToDto(employee));
-        }
-        return dtos;
-    }
-
-    @Override
-    public List<EmployeeDTO> getListByRole(String keyword) throws Exception {
+    public List<EmployeeDTO> getListByRole(String keyword) throws EmployeeException {
         System.out.println("filter by :" + keyword);
         List<EmployeeDTO> dtos = new ArrayList<>();
         if (keyword.equals("All")) {
@@ -192,7 +186,7 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
     }
 
     @Override
-    public List<EmployeeDTO> sortByName(String keyword) throws Exception {
+    public List<EmployeeDTO> sortByName(String keyword) throws EmployeeException {
         List<EmployeeDTO> dtos = new ArrayList<>();
         List<Employee> employees = new ArrayList<>();
         if (keyword.equals("Tăng dần")) {
@@ -212,7 +206,7 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
     }
 
     @Override
-    public List<EmployeeDTO> searchByEmail(String email) throws Exception {
+    public List<EmployeeDTO> searchByEmail(String email) throws EmployeeException {
         List<Employee> employees = OfyService.ofy().load().type(Employee.class)
                 .filter("email >=", email.toLowerCase().trim())
                 .filter("email <", email.toLowerCase().trim() + "\uf8ff")
@@ -225,7 +219,7 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
     }
 
     @Override
-    public List<EmployeeDTO> searchByPhoneNumber(String phoneNumber) throws Exception {
+    public List<EmployeeDTO> searchByPhoneNumber(String phoneNumber) throws EmployeeException {
         List<Employee> employees = OfyService.ofy().load().type(Employee.class)
                 .filter("phoneNumber >=", phoneNumber.toLowerCase().trim())
                 .filter("phoneNumber <", phoneNumber.toLowerCase().trim() + "\uf8ff")

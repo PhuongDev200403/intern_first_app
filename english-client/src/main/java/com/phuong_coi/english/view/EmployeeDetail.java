@@ -13,22 +13,31 @@ import com.google.gwt.user.client.ui.Widget;
 import com.phuong_coi.english.constants.CwConstantsList;
 import com.phuong_coi.english.model.EmployeeDTO;
 
-public class EmployeeDetail extends Composite{
-    interface EmployeeDetailViewUiBinder extends UiBinder<Widget, EmployeeDetail>{};
+public class EmployeeDetail extends Composite {
+    interface EmployeeDetailViewUiBinder extends UiBinder<Widget, EmployeeDetail> {
+    };
+
     public EmployeeDetailViewUiBinder employeeDetailViewUiBinder = GWT.create(EmployeeDetailViewUiBinder.class);
 
-    @UiField TextBox txtId;
-    @UiField TextBox txtFullName;
-    @UiField TextBox txtSoDienThoai;
-    @UiField TextBox txtEmail;
-    @UiField ListBox lbRole = new ListBox(false);
-    @UiField Button btnClose;
-    @UiField Button btnUpdate;
+    @UiField
+    TextBox txtId;
+    @UiField
+    TextBox txtFullName;
+    @UiField
+    TextBox txtSoDienThoai;
+    @UiField
+    TextBox txtEmail;
+    @UiField
+    ListBox lbRole = new ListBox(false);
+    @UiField
+    Button btnClose;
+    @UiField
+    Button btnUpdate;
 
     private PopupPanel popup;
     private final CwConstantsList cwConstantsList = GWT.create(CwConstantsList.class);
 
-    public EmployeeDetail(){
+    public EmployeeDetail() {
         Widget content = employeeDetailViewUiBinder.createAndBindUi(this);
 
         popup = new PopupPanel(true, true);
@@ -37,60 +46,60 @@ public class EmployeeDetail extends Composite{
         popup.setWidget(content);
         hide();
 
-        for(String item : cwConstantsList.cwConstantsAuth()){
+        for (String item : cwConstantsList.cwConstantsAuth()) {
             lbRole.addItem(item);
         }
         txtId.setEnabled(false);
         setEnablePhoneNumber();
 
-        btnClose.addClickHandler(event ->{
+        btnClose.addClickHandler(event -> {
             hide();
         });
 
     }
 
-    //các phương thức có trong popup panel
-    public void showPopup(){
+    // các phương thức có trong popup panel
+    public void showPopup() {
         popup.show();
     }
 
-    public void hide(){
+    public void hide() {
         popup.hide();
     }
 
-    public void centerPopup(){
+    public void centerPopup() {
         popup.center();
     }
 
-    //các phương thức setEnable không cho cập nhật
-    public void setEnablePhoneNumber(){
+    // các phương thức setEnable không cho cập nhật
+    public void setEnablePhoneNumber() {
         txtSoDienThoai.setEnabled(false);
     }
 
-    public void setEnableEmail(){
+    public void setEnableEmail() {
         txtEmail.setEnabled(false);
     }
 
-    //các phương thức get set cho các trường dữ liệu
-    public HasClickHandlers getBtnClose(){
+    public HasClickHandlers getBtnClose() {
         return btnClose;
     }
 
-    public HasClickHandlers getBtnUpdate(){
+    public HasClickHandlers getBtnUpdate() {
         return btnUpdate;
     }
 
-    public String getId(){
+    public String getId() {
         return txtId.getText().trim();
     }
 
-    public void setId(String id){
+    public void setId(String id) {
         txtId.setText(id);
     }
 
-    public String getFullName(){
+    public String getFullName() {
         return txtFullName.getText().trim();
     }
+
     public void setFullName(String fullName) {
         txtFullName.setText(fullName);
     }
@@ -126,9 +135,9 @@ public class EmployeeDetail extends Composite{
         lbRole.setSelectedIndex(0);
     }
 
-    //Phương thức show nhân viên 
-    public void showDetail(EmployeeDTO employee){
-        if(employee == null){
+    // Phương thức show nhân viên
+    public void showDetail(EmployeeDTO employee) {
+        if (employee == null) {
             return;
         }
         setId(employee.getEmployeeId().toString());
@@ -141,7 +150,7 @@ public class EmployeeDetail extends Composite{
         centerPopup();
     }
 
-    public EmployeeDTO getDataFromForm(){
+    public EmployeeDTO getDataFromForm() {
         EmployeeDTO currentUser = new EmployeeDTO();
         currentUser.setEmployeeId(Long.parseLong(getId()));
         currentUser.setFullName(getFullName());
@@ -150,5 +159,5 @@ public class EmployeeDetail extends Composite{
         currentUser.setRole(getRole());
         return currentUser;
     }
-    
+
 }

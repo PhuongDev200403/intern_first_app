@@ -20,8 +20,8 @@ import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
 import com.phuong_coi.english.model.EmployeeDTO;
 
-public class CellTableView extends Composite{
-    interface CellTableViewUiBinder extends UiBinder<Widget, CellTableView>{}
+public class ListView extends Composite{
+    interface CellTableViewUiBinder extends UiBinder<Widget, ListView>{}
     private static CellTableViewUiBinder cellTableViewUiBinder = GWT.create(CellTableViewUiBinder.class);
 
     @UiField 
@@ -48,7 +48,7 @@ public class CellTableView extends Composite{
         }
     };
 
-    public CellTableView(){
+    public ListView(){
     selectionModel = new MultiSelectionModel<>(KEY_PROVIDER);
     cellTable = new CellTable<>(15, null, KEY_PROVIDER);
     cellTable.setSelectionModel(selectionModel);
